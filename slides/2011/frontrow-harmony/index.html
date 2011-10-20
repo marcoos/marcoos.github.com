@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>Harmony: The Shape of Things to Come</title>
+    
+    <link href="slideshow.css" rel="stylesheet" />
+    <link href="theme.css" rel="stylesheet" />
+    <link href="sot2c.css" rel="stylesheet" />
+</head>
+<body data-duration="25">
+
+<section class="slide" id="intro">
+    <header>
+        <h1>Harmony</h1>
+        <h2>The Shape of Things to Come</h2>
+    </header>
+    <div class="about-me">
+        <h3>Marek Stępień - <a href="http://twitter.com/marcoos">@marcoos</a></h3>
+        <ul>
+            <li>sr. web developer, <a href="http://www.interia.pl/">Interia.pl</a></li>
+            <li>co-founder, <a href="http://www.aviary.pl">Aviary.pl</a> (non-profit)</li>
+            <li><a href="http://www.mozilla-europe.org/">Mozilla</a> volunteer contributor</li>
+        </ul>
+    </div>
+    <p class="attribution">Front Row Conference &ndash; Kraków, Poland &ndash; Octobet 19th, 2011</p>
+</section>
+
+<section class="slide darts" title="The Future?">
+    <p class="darts-nofuture">
+        <span>JavaScript has no future.</span><br/>
+        <span>Dart is the future</span><span class="delayed">?</span><br>
+        <span class="delayed">Or maybe there's still hope for JS?</span>
+        <span class="delayed">Let's see.</span>    
+    </p>
+</section>
+
+
+<section>
+    <header class="slide harmonia">
+        <h1>Harmony</h1>
+    </header>
+        
+    <section class="slide">
+        <h2><code>let</code> &ndash; block scope</h2>
+        <pre>let i = 42, j = 1701;
+for (let i = 0; i &lt; 10; i++) {
+    let j = i * i;
+    console.log(i); // 0, 1, 2, ..., 9
+    console.log(j); // 0, 1, 4, ..., 81
+}
+console.log(i, j);  // 42, 1701</pre>
+        <p class="footnote">There's more. I gave <a href="http://l10n.mozilla.org/~marcoos/slides/2011/meetjs-krakow/">a whole talk about <code>let</code> itself at meet.js</a>.</p> 
+    </section>
+
+    <section class="slide">
+        <h2><code>const</code> - constant definitions</h2>
+<pre>const MAX_COUNT = 5;
+MAX_COUNT = 7; // Error!
+</pre>
+    </section>
+
+    <section class="slide">
+    <h2>Destructuring: easy stuff</h2>
+    <ul>
+        <li><code>[a, b] = [5, 10]</code></li>
+        <li>swapping: <code>[a, b] = [b, a]</code></li>
+        <li>returning tuples from a function: <code>[a, b] = someFunction();</code></li>
+    </ul>
+    <p>Not possible in ES5- without temporary variables.</p>
+    </section>
+    
+    <section class="slide">
+    <h2>Destructuring: sophisticated stuff</h2>
+<pre>function getColor() {
+    return {
+        r: 0, g: 0, b: 255,
+        names: { en: "blue", pl: "niebieski" }
+    };
+};
+
+var { r, g, b } = getColor();
+alert([r, g, b].join(" "));  // "0 0 255";
+
+var { b: blue, names: { en: enName }} = getColor();
+alert(blue + " " + enName); // "255 blue"
+</pre>
+    </section>
+    
+    <section class="slide">
+        <h2>default argument values</h2>
+<pre>
+function showErrorMsg(text = "unknown error") {
+    alert("Error occured: " + text);
+}
+</pre>
+<p>In ES5 you would do <code>text = text || "unknown error"</code> in function body instead.</p>
+    </section>
+    
+    <section class="slide">
+        <h2>rest function arguments</h2>
+<pre>function multiply(multiplier, ...rest) {
+    return rest.map(function (num) {
+        return num * multiplier;
+    });
+}
+var arr = multiply(10, 1, 2, 3);
+//arr is now: [ 10, 20, 30 ];
+</pre>
+<p>In ES5- you would have to mingle with the <code>arguments</code> object instead.</p>
+    </section>
+
+    <section class="slide">
+        <h2>spread function arguments</h2>
+<pre>function foo(a, b, c) {
+    return a + b + c;
+}
+var args = [1, 10, 100];
+result = foo(...args);      // 111
+result = foo(0, ...args);   // 11  (a=0, b=1, c=10);
+</pre>
+<p>In ES5-: <code>result = foo.apply(null, args);</code></p>
+    </section>
+    
+    <section class="slide">
+        <h2>lambdas</h2>
+        <p>Two proposals:</p>
+        <div class="two-column-pres">
+        <pre>// <a href="http://wiki.ecmascript.org/doku.php?id=strawman:arrow_function_syntax">arrow functions</a>
+[1,2,3].map(<u>(x) -> x*x</u>);</pre>
+        <pre>// <a href="http://wiki.ecmascript.org/doku.php?id=strawman:block_lambda_revival">block lambda revival</a>
+[1,2,3].map {<u>|x| x*x</u>};</pre>
+        </div>
+        <p>TC39 hasn't decided yet which to choose.</p>
+        <div class="delayed">
+            <p>Currently this non-standard syntax works in Firefox:</p>
+            <pre>[1,2,3].map(function(x) x*x);</pre>
+        </div>
+    </section>
+    
+    <section class="slide">
+        <h2>ES5 property descriptors</h2>
+        <p>ES5 <code>Object.create()</code> introduced some new features:</p>
+<pre class="delayed">var obj = Object.create(theProtoObj, {
+    konst: { value: f(), enumerable: false, writable: false },
+    handler: { value: defaultHandler, writable: true,
+                enumerable: true, configurable: true },
+    name: {
+        get: function () { return theProtoObj.name.call(this) },
+        set: function(v) { throw Error("some message") },
+        enumberable: false, configurable: true
+    },
+   source: { value: function() {throw Error("another message")} },
+   toString: { value: function() {return "d "+theProtoObj.toString.call(this)} }
+});
+</pre>
+    <img class="delayed popup-image" style="width:3.5em;margin-top:-3em" src="res/memes_spock.jpg" alt="Spock is not impressed with ES5 syntax"/>
+    </section>
+    
+    <section class="slide">
+        <h2>improved object literal</h2>
+        <p>ES.next extended object literal simplifies the syntax:</p>
+<pre>var obj = theProtoObj &lt;| {
+  konst:= f(), 
+  handler: defaultHandler, 
+  get super set name(v) {throw Error("some message")},
+  source() {throw Error("another message")},
+  toString() {return "d "+super.toString()}
+};
+</pre>
+    <img class="delayed popup-image" style="width:10em" src="res/memes_spock_impressed.jpg" alt="Spock is impressed"/>
+    </section>
+    
+    <section class="slide">
+        <h2>improved object literal, cont'd<h2>
+        <p>Subclassing <code>Array</code>: now brain-dead easy!</p>
+<pre>let myArrayProto = Array.prototype <| {
+    sum() {
+        return this.reduce((p, c) -> p + c);
+    }
+};
+
+let myArrayInstance = myArrayProto <| [0,1,2,3,4,5];
+alert(myArrayInstance.sum());  // 15<!--alert(myArrayInstance instanceof Array); // true--></pre>
+    </section>
+    
+    <section class="slide">
+        <h2>improved object literal &amp; Name.create()</h2>
+<pre>const secret = Name.create();
+
+let obj = {
+   x: 0,
+   get [Math.random()]() {return this.x + this[secret]},
+   [secret]: 42
+};</pre>
+    </section>
+    
+    <section class="slide">
+        <h2>augmenting objects</h2>
+        <div class="two-column-pres">
+        <pre>// ES5-:
+var obj = getAnObj();
+obj.foo = 5;
+obj.bar = 7;
+// ...
+obj.baz = 9;</pre>
+        <pre class="delayed">// ES.next:
+let obj = getAnObj().{
+    foo: 5,
+    bar: 7,
+    // ...
+    baz: 9
+};</pre>
+        </div>
+    </section>
+        
+    <section class="slide">
+        <h2>Generators (<code>function*</code>, <code>yield</code>)</h2>
+<pre>
+<u>function*</u> fib() {  
+    let i = 0, j = 1;  
+    while (true) {  
+        <u>yield i</u>;
+        [i, j] = [ j, j + i ];
+    }  
+}  
+
+let g = fib();  
+
+for (let i = 0; i < 10; i++) {  
+    console.log(g.next());  
+}
+</pre>
+    </section>
+
+    <section class="slide">
+        <h2>Generators &amp; callback-less async I/O</h2>
+        <p><a href="https://github.com/dherman/taskjs">dherman's task.js</a> for async I/O without callbacks:</p>
+<pre>spawn(function() { // in ES.next: "function* ()"
+    try {
+        var [foo, bar] = yield join(read("foo.json"),
+                                    read("bar.json")).timeout(1000);
+        render(foo);
+        render(bar);
+    } catch (e) {
+        console.log("read failed: " + e);
+    }
+});</pre>
+    <p class="emphasis">NOTE: this currently uses non-standard, asterisk-less JS 1.7 syntax, not the ES.next one!</p>
+    </section>
+
+    <section class="slide">
+        <h2>for...of</h2>
+<pre>
+var arr = [ 3, 5, 7 ],
+    obj = { x: 4, y: 6, z: 8 };
+
+for (var i in arr)   // i = 0, 1, 2
+for (var i of arr)   // i = 3, 5, 7
+
+for (var i in obj)   // i = "x", "y", "z"
+for (var i of obj)   // i = 4, 6, 8
+
+for ([key, value] of items(obj))
+// iterates over [key, value] pairs
+// (["x", 4], ["y", 6], ["z", 8])
+</pre>
+    </section>
+        
+    <section class="slide">
+        <h2>quasis</h2>
+        <pre>foo`bar${baz}boo`</pre>
+        <p class="delayed">desugars to a function call:</p>
+        <pre class="delayed">foo(['bar', 'boo'], [baz])</pre>
+        <p class="delayed"><a href="http://js-quasis-libraries-and-repl.googlecode.com/svn/trunk/index.html">quasis demo</a></p>
+    </section>
+    
+    <section class="slide">
+        <h2>quasis - safehtml<h2>
+
+<pre>url = "http://example.com/"; color = "red";
+message = query = "Hello & Goodbye";
+
+someDiv.innerHTML =
+safehtml`&lt;a href="${url}?q=${query}"
+onclick=alert(${message})
+style="color: ${color}">${message}&lt;/a&gt;`;
+</pre>
+
+<pre class="delayed">
+&lt;a href="http://example.com/?q=Hello%20%26%20Goodbye"
+onclick=alert(&amp;#39;Hello&#32;\x26&amp;#32;Goodbye&amp;#39;)
+style="color: red"&gt;Hello &amp;amp; Goodbye&lt;/a&gt;
+</pre>
+    </section>
+    
+    <section class="slide">
+        <h2>There's more</h2>
+        <ul>
+            <li><code>module NewMath { export function fast_sin(x) { ... } }</code></li>
+            <li>array comprehensions: <code>[ square(x) for (x of [1,2,3,4,5]) ]</code></li>
+            <li><code>WeakMap</code> - non-enumerable object-identity-based tables</li>
+            <li><code>Proxy</code> - a “catchall” mechanism for intercepting property accesses generically</li>
+            <li><code>StructType</code> for binary data</li>
+            <li><code>typeof null === "null"</code> (and not <code>"object"</code> like in ES5-)</li>
+            <li>classes - probably as syntactic sugar for constructors + prototypes</li>
+            <li>...and more: <a href="http://wiki.ecmascript.org/doku.php?id=harmony:proposals">harmony:proposals</a></li>
+        </ul>
+    </section>
+    
+    <section class="slide">
+        <h2>Play with ES.next features</h2>
+        <img class="es6-cats delayed" src="res/cats.jpg" alt="Cats coding!" />
+        <ul>
+            <li class="delayed">let, lambdas, yield, destructuring, array comprehensions, Proxy, WeakMap - <a href="http://kangax.github.com/es5-compat-table/non-standard/">already (somewhat) in Firefox</a>. Opt-in: <code>&lt;script type="application/javascript;version=1.8"&gt;</code></li>
+            <li class="delayed">Zach Carter's <a href="http://zaach.github.com/reflect.js/es-next/">reflect.js/es-next</a> - ES.next to ES5 transpiler</a></li>
+            <li class="delayed"><a href="https://github.com/mozilla/narcissus">Narcissus</a> has some Harmony features: <code>njs -H</code>, more to come</li>
+            <li class="delayed"><a href="http://code.google.com/p/traceur-compiler/">Google Traceur</a> has some Harmony features, too</li>
+        </ul>
+        <p class="emphasis delayed">These implementations may be incomplete and sometimes even differ a lot from what's currently in the drafts! You've been warned.</p>
+    </section>
+        
+<footer class="slide" title="The End">
+    <h2>Thank you!</h2>
+    
+    <p>Stay in touch with ES.next development:</p>
+    <ul class="two-column">
+        <li><a href="http://www.ecmascript.org/">ecmascript.org</a></li>
+        <li><a href="https://mail.mozilla.org/listinfo/es-discuss">es-discuss mailing list</a></li>
+        <li><a href="http://twitter.com/BrendanEich">@BrendanEich</a>,
+            <a href="http://twitter.com/awbjs">@awbjs</a>,
+            <a href="http://twitter.com/littlecalculist">@littlecalculist</a>,
+            <a href="http://twitter.com/kangax">@kangax</a>,
+            <a href="http://twitter.com/slightlylate">@slightlylate</a>
+        </li>
+    </ul>
+    
+    <p>Slides will be online. Follow <a href="http://twitter.com/marcoos">@marcoos</a> or <a href="http://twitter.com/#!/search?q=%23frontrowconf">#frontrowconf</a> for the URL.</p>
+    <p>Rate this talk: <a href="http://spkr8.com/t/8776">spkr8.com/t/8776</a>. See this talk on Lanyrd: <a href="http://j.mp/sot2c">j.mp/sot2c</a>
+    <div class="colophon">
+    <p>Slides powered by <a href="http://leaverou.me">Lea Verou</a>'s <a href="https://github.com/LeaVerou/CSSS/">CSSS</a> engine.</p>
+    <p>Images: part of "<a href="http://www.mezzo-mondo.com/arts/mm/preraphaelites/demorgan/index.html">Cadmus and Harmonia</a>" by <a href="http://en.wikipedia.org/wiki/Evelyn_De_Morgan">Evelyn De Morgan</a> (copyright expired),
+    "<a href="http://www.flickr.com/photos/bogdansuditu/2377844553/">Darts</a>" by <a href="http://www.flickr.com/photos/bogdansuditu/">Bogdan Suditu</a> (CC-BY 2.0),
+    "<a href="http://www.flickr.com/photos/themadlolscientist/2542236565/">Geek Cats</a>" by <a href="http://www.flickr.com/photos/themadlolscientist/2542236565/">the mad LOLscientist</a> (CC-BY 2.0),
+    background image - <a href="http://www.flickr.com/photos/johnwilson1969/362582003/in/photostream/">untitled</a> by <a href="http://www.flickr.com/photos/johnwilson1969/3">John Wilson</a> (CC-BY-SA)
+    </p>
+    <p>Inspiration, some examples and ideas taken from:
+        <a href="http://www.slideshare.net/dmitrysoshnikov/falsyvalues-dmitry-soshnikov-ecmascript-6">D. Soshnikov, "ECMAScript > Future"</a>,
+        <a href="http://www.slideshare.net/slideshow/embed_code/8281947">B. Eich at TX.JS</a>,
+        <a href="http://blog.mozilla.com/dherman/2011/02/23/my-js-meetup-talk/">D. Herman, "ECMAScript.Next"</a>.
+    </p>
+    <p>This presentation does not reflect the views of neither my employer nor organizations I am member of.</p>
+    <p>Copyright &copy; 2011 by Marek Stępień. Some Rights Reserved &ndash; code: <a href="https://raw.github.com/marcoos/CSSS-plugins/master/license.txt">MIT license</a>, slide contents - <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA 2.0.</p>
+    </ul>
+    </div>
+</footer>
+
+<script src="slideshow.js"></script>
+
+<script>
+var slideshow = new SlideShow();
+</script>
+
+</body>
+</html>

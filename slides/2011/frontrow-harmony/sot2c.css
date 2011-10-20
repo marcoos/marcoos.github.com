@@ -1,0 +1,182 @@
+.delayed.displayed,
+.delayed-children > .displayed {
+	opacity: 1.0;
+}
+
+.two-column {
+    -moz-column-count: 2;
+    -webkit-column-count: 2;
+    -ms-column-count: 2;
+    -o-column-count: 2;
+    column-count: 2;
+}
+
+.biblio {
+	font-size: 0.7em;
+}
+
+.colophon {
+	font-size: 0.4em;
+}
+
+.slide h2 {
+	font-size: 2em;
+}
+
+.slide > ul > li.risky:before, .risky-descr {
+	color: #f00;
+	content: "~"
+}
+
+.footnote {
+	font-size: 0.5em;
+}
+
+.two-column-pres pre {
+    width: 45%;
+    float: left;
+    margin-right: 1ex;
+}
+
+.two-column-pres {
+    overflow: hidden;
+}
+
+.two-column {
+    -moz-column-count: 2;
+    -webkit-column-count: 2;
+    column-count: 2;
+}
+
+/* == slide specific == */
+
+/* === darts === */
+.darts {
+    background: url(res/darts_bsuditu_ccbysa.jpg) no-repeat;
+    background-size: cover;
+    -moz-background-size: cover;
+    background-position: -10%;
+    border:0;
+}
+
+.darts-nofuture {
+    font-size: 170%;
+    margin: 1em auto auto;
+}
+
+.darts-nofuture span {
+    margin: .2em;
+    display: inline-block;
+    padding: .01em 0.3em;
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.delayed.popup-image {
+    position: absolute !important;
+    top: 6em;
+    left: 4em;
+    
+    -moz-transform: rotate(-20deg) scale(0.1);
+    -webkit-transform: rotate(-20deg) scale(0.1);
+    -ms-transform: rotate(-20deg) scale(0.1);
+    -o-transform: rotate(-20deg) scale(0.1);
+    transform: rotate(-20deg) scale(0.1);
+    
+    -moz-transition: -moz-transform 1s ease-out;
+    -webkit-transition: -webkit-transform 1s ease-out;
+    -ms-transition: -ms-transform 1s ease-out;
+    -o-transition: -o-transform 1s ease-out;
+    transition: transform 1s ease-out;
+    
+    border-radius: 20px;
+    -moz-box-shadow: #000 0 0 10px;
+    box-shadow: #000 0 0 10px;
+}
+
+.current.popup-image {
+       -moz-transform: rotate(0deg) scale(1);
+    -webkit-transform: rotate(0deg) scale(1);
+        -ms-transform: rotate(0deg) scale(1);
+         -o-transform: rotate(0deg) scale(1);
+            transform: rotate(0deg) scale(1);
+    min-width: 10em;
+}
+
+/* === play with es6 === */
+
+.es6-cats {
+    width: 17em;
+    position: absolute;
+    -moz-transform: rotate(-20deg) scale(0.01);
+    -ms-transform: rotate(-20deg) scale(0.01);
+    -webkit-transform: rotate(-20deg) scale(0.01);
+    -o-transform: rotate(-20deg) scale(0.01);
+    transform: rotate(-20deg) scale(0.01);
+    
+    -moz-transition: 1s ease-out;
+    -ms-transition: 1s ease-out;
+    -webkit-transition: 1s ease-out;
+    -o-transition: 1s ease-out;
+    transition: 1s ease-out;
+    
+    border-radius: 20px;
+    -moz-box-shadow: #000 0 0 10px;
+    box-shadow: #000 0 0 10px;
+    opacity: 0 !important;
+}
+
+.es6-cats.current {
+    -moz-transform: scale(1);
+    -ms-transform: scale(1);
+    -o-transform: scale(1);
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    opacity: 1 !important;
+}
+
+/* === harmonia === */
+
+.harmonia {
+    background: url(res/harmonia_evelyndemorgan.jpg) no-repeat;
+    background-size: contain;
+    -moz-background-size: contain;
+    background-position: center;
+}
+
+.harmonia h1 {
+    top: 85% !important;
+    text-shadow: #000 0 0 5px, #000 0 0 15px, #000 0 0 25px;
+}
+
+/* === intro === */
+
+#intro header {
+    text-align: center;
+    background: rgba(0,0,0, 0.5);
+}
+#intro h1 {
+    font-size: 2em;
+    margin-bottom: 0;
+    margin-top: 1ex;
+}
+
+#intro h2 {
+    font-size: 1.7em;
+    margin-top: -1ex;
+}
+
+.about-me {
+    background: rgba(255,255,255, 0.3);
+    font-size: 0.7em;
+    float: right;
+    padding: 1em;
+    margin: 1em 0;
+}
+
+.about-me ul {
+    list-style: none;
+}
+.about-me li {
+    padding: 0;
+    margin: 0;
+}
