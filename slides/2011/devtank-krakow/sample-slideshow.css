@@ -1,0 +1,89 @@
+#intro {
+	background: rgba(0,0,0,.7);
+	padding: 0;
+	border: 0;
+}
+
+#intro h1 {
+	text-align: center;
+	min-height: 500px;
+	margin: 5% auto 0;
+	font-family: "Helvetice Neue", Helvetica, sans-serif;
+	font-size: 3.5em;
+	font-weight: normal;
+	color: #fff;
+	text-shadow: #fff 0 0 30px;
+}
+
+#intro .attribution {
+	font-family: Helvetica, sans-serif;
+	font-weight: bold;
+	text-align: center;
+	font-size: 80%;
+	line-height: .9;
+	color: rgba(0,0,0,.7);
+	text-shadow: none;
+	background: rgba(255, 245, 245, 0.5);
+	padding:.6em 0 0;
+	overflow: hidden;
+}
+
+var {
+	font-style: italic !important;
+}
+
+.hasFeature {
+	color: #A0C12C;
+	text-align: center;
+}
+
+.hasNoFeature {
+	color: #f00;
+	text-align: center;
+}
+
+.featureTHead th {
+	padding: 1em;
+}
+
+.c0nsole-pre {
+	position: fixed;
+	left: 1em;
+	right: 1em;
+	top: 1em;
+	height: 8em;
+	-moz-resize: vertical;
+	-webkit-resize: vertical;
+	resize: vertical;
+	z-index: 1000;
+	color: #fff;
+	background: rgba(0, 0, 0, 0.9);
+	font-size: 3rem;
+	opacity: 1;
+	-moz-transition: opacity 0.5s ease-in, -moz-transform 0.5s ease-in;
+	-webkit-transition: opacity 0.5s ease-in, -webkit-transform 0.5s ease-in;
+	transition: opacity 0.5s ease-in, transform 0.5s ease-in;
+	overflow-x: hidden;
+	overflow-y: auto;
+	word-wrap: break-word;
+	white-space: pre-wrap;
+}
+
+.c0nsole-pre-hidden {
+	opacity: 0;
+	-moz-transform: scale(0) rotate(-45deg);
+	-webkit-transform: scale(0) rotate(-45deg);
+	transform: scale(0) rotate(-45deg);
+}
+
+.biblio {
+	font-size: 0.7em;
+}
+
+.colophon {
+	font-size: 0.4em;
+}
+
+.slide h2 {
+	font-size: 2em;
+}

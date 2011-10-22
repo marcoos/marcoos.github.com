@@ -1,0 +1,105 @@
+Object.create() i prototypy
+
+Poniższa notka to obiecana trzecia część cyklu o nowym podejściu do obiektów w ES5. Od poprzednich dwóch części minęło trochę czasu, ale przecież lepiej późno niż wcale. Zaczynamy.
+
+W dwóch poprzednich odcinkach opisałem, <a href="http://blog.marcoos.com/2011/03/24/ecmascript-5-ograniczanie-mozliwosci-modyfikacji-obiektow/">w jaki sposób można ograniczać możliwości modyfikacji obiektów</a> i <a href="http://blog.marcoos.com/2011/03/20/ecmascript-5-deskryptory-wlasnosci/">jak tworzyć własności obiektów przy użyciu deskryptorów własności</a>. W pierwszym z artykułów wspomniałem też o tym, że każdy obiekt w JS znajduje się w łańcuchu prototypów, po których dziedziczy własności, których sam nie posiada.
+
+Krótko przypomnijmy najważniejsze rzeczy. ECMAScript 3 nie posiadał możliwości bezpośredniego zarządzania prototypami obiektów. Ustawianie prototypu danego obiektu możliwe było tylko przez ustawienie własności <code>prototype</code> funkcji, a następnie wywołanie jej jako konstruktora przy użyciu operatora <code>new</code>:</p>
+
+[sourcecode language="javascript"]
+function MyObj() {
+    /* treść konstruktora; może być pusta */
+}
+
+MyObj.prototype = { // prototyp dla myObj
+    prop1: "value1"
+};
+
+var myObj = new MyObj();
+
+Tak więc zawsze konieczny był konstruktor, nawet jeśli miałby zupełnie nic nie robić. Było to dość absurdalne, jako że JS &ndash; język o prototypowej formie dziedziczenia &ndash; umożliwiał zarządzanie prototypami wyłącznie poprzez notację zaprojektowaną od początku jako coś, co miało &ndash; lepiej lub gorzej &ndash; udawać klasowej formie dziedziczenia. (pomijam tu rozszerzenia niestandardowe, takie jak dostępna m. in. w Gecko własność <code>__proto__</code>).
+
+Douglas Crockford zaproponował swego czasu funkcję, która tworzyła tymczasowy, pusty konstruktor, ustawiała jego własność <code>prototype</code> na zadany obiekt, i zwracała nowy obiekt utworzony operatorem <code>new</code>.
+
+[sourcecode language="javascript"]
+Object.beget = function (o) {
+    function F() {}
+    F.prototype = o;
+    return new F();
+};
+[/sourcecode]
+
+Używało się tego w sposób następujący:
+
+[sourcecode language="javascript"]
+var myProto = {
+    prop1: "value1",
+    method1: function () { /* ... */ }
+};
+
+var myObj = Object.beget(myProto);
+[/sourcecode]
+
+Funkcja <code>beget</code> Crockforda stała się punktem wyjścia do dalszych prac w TC-39. W efekcie w piątej edycji ECMAScriptu pojawiła się funkcja
+Object.create(), która działa bardzo podobnie:
+
+[sourcecode language="javascript"]
+var myProto = {
+    prop1: "value1",
+    method1: function () { /* ... */ }
+};
+
+var myObj = Object.create(myProto);
+[/sourcecode]
+
+Mamy tu jednak dwie ważne różnice. Po pierwsze, <code>create</code> jako funkcja wbudowana w silnik JS nie tworzy żadnych tymczasowych funkcji, ale operuje bezpośrednio na wewnętrznej własności <code>[[Prototype]]</code>. Po drugie, oprócz pierwszego argumentu, jakim jest obiekt, który ma być wykorzystany jako prototyp, Object.create może także przyjąć opcjonalny argument drugi, którym jest hash deskryptorów własności &ndash; dokładnie to samo, co jest argumentem <a href="http://blog.marcoos.com/2011/03/20/ecmascript-5-deskryptory-wlasnosci/">Object.defineProperties()</code>:
+
+[sourcecode language="javascript"]
+var myProto = {
+    prop1: "value1",
+    method1: function () { /* ... */ }
+};
+
+var propDescriptors = {
+    prop2: {
+        writable:     false,
+        enumerable:   false,
+        configurable: false,
+        value: 7
+    }
+    /* i tu ew. dalsze deskryptory */
+}
+
+var myObj = Object.create(myProto, propDescriptors);
+[/sourcecode]
+
+Object.create() w pełnej postaci (z obsługą deskryptorów) nie może być dodana jako <i>polyfill</i> dla przeglądarek nieobsługujących ES5. Jeśli jednak nie zamierzamy korzystać z deskryptorów, <code>Object.beget()</code> Crockforda po zmianie nazwy jest wciąż dość dobrym zamiennikiem. Takie rozwiązanie proponuje np. Mozilla Developer Network w <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object/create#Cross-browser_compatibility">artykule o Object.create()</a>.
+
+ES5 dostarcza także funkcji pozwalającej odnaleźć prototyp danego obiektu: <code>Object.getPrototypeOf(obj)</code>:
+
+[sourcecode language="javascript"]
+var myProto = {
+    prop1: "value1",
+    method1: function () { /* ... */ }
+};
+
+var myObj = Object.create(myProto);
+
+alert(Object.getPrototypeOf(myObj) === myProto);
+// wyświetla: true
+[/sourcecode]
+
+W dalszym ciągu standard ECMAScript nie pozwala jednak na podmianę prototypu już istniejącego obiektu. 
+
+Na koniec kilka słów o tym, czy nie da się tego wszystkiego zrobić prościej. Miałem już kilka prezentacji na ten ES5, a także dyskusji z innymi developerami (w tym <a href="http://ferrante.pl>Damianem Wielgosikiem</a>) i bardzo często podczas dyskusji pojawiało się pytanie o to, czy podoba mi się taka składnia. Otóż nie, nie podoba mi się, ale w tej chwili nie niestety ma innego wyjścia.
+
+Cała nadzieja w ECMAScripcie 6: prawdopodobnie <a href="http://wiki.ecmascript.org/doku.php?id=harmony:object_literals">notacja literału obiektowego zostanie tak rozszerzona</a>, by nie trzeba było korzystać z funkcji takich jak <code>create()</code> do określenia prototypu. Być może więc w celu utworzenia obiektu <code>myObj</code> dziedziczącego po <code>myProto</code>, z własną, niezapisywalną (<code>:=</code>),
+niewyliczalną (<code>~</code>) i niekonfigurowalną (<code>!</code>) własnością <code>prop2</code> (takiego jak dwa przykłady temu) będzie można napisać po prostu tak:
+
+[sourcecode language="javascript"]
+let myObj = myProto <| {
+    ~!prop2 := 7
+};
+[/sourcecode]
+
+Czy tak się stanie, dopiero się przekonamy. Czy jest to bardziej czytelne niż <code>create</code> i deskryptory? Sami zdecydujcie. Na pewno tak byłoby jednak sporo krócej. :)

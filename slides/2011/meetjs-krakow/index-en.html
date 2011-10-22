@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+	<title>Block Scope in ECMAScript 6</title>
+	
+	<link href="slideshow.css" rel="stylesheet" />
+	<link href="theme.css" rel="stylesheet" />
+	<link href="sample-slideshow.css" rel="stylesheet" />
+    <link href="plugins/c0nsole.css" rel="stylesheet" />
+</head>
+<body data-duration="20">
+
+<header id="intro" class="slide">
+	<h1>Block Scope in ES6</h1>
+	<h2><code>let</code>'s get it started!</h2>
+	<p class="attribution">Marek Stępień</p>
+</header>
+
+<div class="slide">
+	<h2>Who's doin' the talkin'?</h2>
+	<ul>
+		<li>Marek Stępień - <a href="http://twitter.com/marcoos">@marcoos</a></li>
+		<li>&bdquo;I wear many hats&rdquo;
+			<ul>
+				<li>sr. web developer at <a href="http://interia.pl">Interia.pl</a>
+				<li>Mozilla contributor (Firefox PL, tech-evang, <a href="http://mozilla-europe.org">Moz-Eu</a> &amp; <a href="http://aviary.pl/">Aviary.pl</a> member)
+				<li>tech blogger - <a href="http://blog.marcoos.com">blog.marcoos.com</a>
+			</ul>
+		<li>Which hat am I wearing today? You tell me :)</li>
+	<p>This talk does not represent the views of my employer.</p>
+	</ul>
+</div>
+
+<div class="slide" title="ECMAScript 5">
+	<h2>ECMAScript 5</h2>
+	<ul>
+		<li><code>JSON.parse(<var>str</var>)</code>, <code>JSON.stringify(<var>obj</var>)</code></li>
+		<li><code>Object.create()</code>, <code>defineProperty()</code>, <code>seal()</code>, <code>freeze()</code> etc.</li>
+		<li><code>Function.prototype.bind()</code> - bound functions</li>
+		<li>higher-order functions for arrays (<code>reduce</code>, <code>map</code>, <code>filter</code> etc.)</li>
+		<li>Strict Mode</li>
+		<li>fully supported in Firefox 4+; for other browsers see <a target="_blank" href="http://kangax.github.com/es5-compat-table/">kangax's table</a></li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h2>Warning!</h2>
+	<p class="emphasis">All of this stuff is pretty bleeding-edge, not yet accepted by ECMA/TC-39.
+		Everything can change and look totally different in the final ES6 spec. :-)</p>
+</div>
+
+<div class="slide">
+	<h2>ECMAScript 6 &bdquo;Harmony&rdquo;</h2>
+	<ul>
+		<li class="delayed">block scope thanks to <code>let</code></li>
+	        <li class="delayed">constants: <code>const answerToEverything = 42;</code></li>
+	        <li class="delayed">destructuring assignment: <code>[a, b] = [5, 10];</code></li>
+	        <li class="delayed">lambdas: <code>[1,2,3].map((x) -> x*x)</code></li>
+		<li class="delayed"><code>Proxy</code> objects facilitating metaprogramming</li>
+	        <li class="delayed">iterators and generators, <code>yield <var>x</code></li>
+		<li class="delayed"><code>WeakMap</code>
+	        <li class="delayed">default argument values: <code>function f(someArg = 5) {}</code></li>
+		<li class="delayed">rest and spread for function calls</li>
+	        <li class="delayed">modules</li>
+		<li class="delayed">classes (possibly just syntactic sugar)</li>
+		<li class="delayed">and more...</li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h2>ES6 support in Firefox</h2>
+	<ul>
+	        <li>block scope thanks to<code>let</code> (JS1.7, Fx2)</li>
+	        <li class="risky">constants: <code>const answerToEverything = 42;</code> (JS 1.5, even in NS&nbsp;6)</li>
+	        <li class="risky">destructuring assignment: <code>[a, b] = [5, 10];</code> (JS 1.8, Fx3)</li>
+	        <li class="risky">lambdas: <code>[1,2,3].map(function(x) x*x)</code> (JS 1.8, Fx3)</code></li>
+		<li class="risky"><code>Proxy</code> objects (JS2, Fx4)</li>
+	        <li class="risky">iterators and generators, <code>yield <var>x</code> (JS 1.7, Fx2)</li>
+		<li class="risky"><code>WeakMap</code> (Fx6)</li>
+	</ul>
+	<p class="emphasis"><span class="risky-descr">~</span> = differences with the final spec highly probable</p>
+</div>
+
+<div class="slide">
+	<h2>Opt-in for the new syntax in Fx</h2>
+	<p>Some ES6 features have a syntax that is incompatible with older JS versions, so ES6 code has to be
+	marked in a special way. To get all the features in current Firefoxes:</p>
+	<pre>&lt;script type="application/javascript;version=1.8"&gt;
+let x = 5;
+&lt;/script&gt;</pre>
+	<p class="emphasis">The final standard will surely differ here ("application/ecmascript;version=6"?)</p>
+	<p>ES6 stuff not needing new syntax can work without this <code>type</code> attribute.</p>
+</div>
+
+<div class="slide">
+	<h2>Scope in JS (ES3) - how it's been</h2>
+	<textarea class="js-snippet" style="height:11em">var foo = 42; 
+(function () { 
+    if (!foo) { 
+        var foo = 1701; 
+    } 
+    c0nsole.write(foo); 
+}());</textarea>
+	<p class="delayed">What will <code>c0nsole.write</code> show? why?<br>
+	Know the answer? NOT SO FAST! Let others think about this for a while, too! :)</p>
+</div>
+
+<div class="slide">
+	<h2>Scope in JS (ES3) - how it's been</h2>
+	<ul>
+		<li><code>var someVar</code> - defines a variable visible in the current function
+		<li>regardles of where <code>var</code> appeared in the function ("hoisting")
+	<p>Code from the previous example is interpreted the same way as this:</p>
+<textarea class="js-snippet" style="height:13em">var foo = 42; 
+(function () {
+    var foo;
+    if (!foo) { 
+        foo = 1701; 
+    } 
+    c0nsole.write(foo); 
+}());</textarea>
+</div>
+
+<div class="slide">
+	<h2>Scope in JS (ES3) - how it's been</h2>
+	<ul>
+		<li>inner functions see variables from outer functions
+		<li>...unless there are local variables with the same name
+	</ul>
+<textarea class="js-snippet" style="height:9em">var foo = 42, bar = 1701; 
+(function () {
+    var bar = 31337;
+    c0nsole.write([foo, bar].join(" "));
+}());</textarea>
+</div>
+
+<div class="slide">
+	<h2>Scope in JS (ES3) - how it's been</h2>
+	<ul>	
+		<li>global variables are also properties of the global object (<code>window</code> in browsers)
+		<li>accessing a variable not declared with <code>var</code> = accessing a global
+	</ul>
+<textarea class="js-snippet" style="height:11em">window.foo = 42; 
+(function () {
+    bar = 1701;
+    foo = 5;
+}());
+c0nsole.write([foo, bar, window.foo, window.bar].join(" "));
+</textarea>
+</div>
+
+<div class="slide">
+	<h2>Problem with <code>var</code></h2>
+	<textarea class="js-snippet" style="height:9em">
+var x = [];
+for (var i = 0; i < 10; i++) {
+  x[i] = function () { c0nsole.write(i); }
+}
+x[3](); // what will this show?</textarea>
+</div>
+
+<div class="slide">
+	<h2>Old solution: closure</h2>
+	<textarea class="js-snippet" style="height:12em">
+var x = [];
+for (var i = 0; i < 10; i++) {
+  (function (c) {
+    x[i] = function () { c0nsole.write(c); }
+  }(i));
+}
+x[3](); // what will this show?</textarea>
+</div>
+
+<div class="slide">
+	<h2>ES5 solution: bound function</h2>
+	<textarea class="js-snippet" style="height:12em">
+var x = [];
+for (var i = 0; i < 10; i++) {
+    x[i] = (function (i) { c0nsole.write(i); }).bind(null, i);
+}
+x[3](); // what will this show?</textarea>
+</div>
+
+<div class="slide">
+	<h2>ES3: crazy evil trick with <code>throw</code></h2>
+	<textarea class="js-snippet" style="height:12em">
+var x = [];
+for (var i = 0; i < 10; i++) {
+  try { throw (i) } catch (i) {
+    x[i] = function () { c0nsole.write(i); }
+  }
+}
+x[3](); // what will this show?</textarea>
+<p class="emphasis">TEH EVILZ! Don't use it. EVER!</p>
+</div>
+
+<div class="slide">
+	<h2>ES6: <code>let</code> the sunshine in :)</h2>
+	<textarea class="js-snippet" style="height:10.5em">
+var x = [];
+for (var i = 0; i < 10; i++) {
+  let c = i;
+  x[i] = function () { c0nsole.write(c); }
+}
+x[3](); // what will this show?</textarea>
+</div>
+
+
+<div class="slide">
+	<h2>Three variants of <code>let</code></h2>
+	<ul>
+		<li><code>let</code> definition
+		<li><code>let</code> statement
+		<li><code>let</code> expression
+	</ul>
+</div>
+
+<div class="slide">
+	<h2><code>let</code> definition</h2>
+	<ul>
+		<li>defines a variable with scope limited to the block in which the definition is contained</li>
+		<li>syntax &ndash; identical to <code>var</code>:<br>
+			<code>let <var>varName</var>;</code><br>
+			<code>let <var>varName</var> = <var>expression</var>;</code><br>
+			<code>let <var>v1</var> = <var>exp1</var>, <var>v2</var> = <var>exp2</var>, &hellip;, <var>vN</var> = <var>expN</var></code>
+		</li>
+		<li>you've already seen the example :)</li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h2><code>let</code> statement</h2>
+	<ul>
+		<li><code>let (<var>variable_definitions</var>) { <var>code_block</var> }</code></li>
+	</ul>
+
+	<textarea class="js-snippet" style="height:9em">let a = 42;
+let (a = 5, b = 10) {
+  c0nsole.write("a+b: " + (a + b));
+  c0nsole.write("a*b: " + a * b);
+}
+c0nsole.write("a outside of the block: " + a);
+try {
+  c0nsole.write("b outside of the block: " + b);
+} catch (exc) {
+  c0nsole.write(exc);
+}</textarea>
+
+</div>
+
+<div class="slide">
+	<h2><code>let</code> expression</h2>
+	<ul>
+		<li><code>let (<var>variable_definitions</var>) <var>expression</var></code></li>
+		<li>variables are local to the expression, which forms an implicit block:</li>
+	</ul>
+	<textarea class="js-snippet" style="height:6em">let a = 42;
+let (a = 5, b = 10) c0nsole.write(a + b);
+c0nsole.write(a);</textarea>
+</div>
+
+<div class="slide">
+	<h2><code>let</code> expression</h2>
+	<ul>
+		<li>can be used everywhere you can put a normal expression:</li>
+	</ul>
+	<textarea class="js-snippet">c0nsole.write(let (a = 5, b = 10) a + b);</textarea>
+</div>
+
+<div class="slide">
+	<h2>Where to play with <code>let</code>?</h2>
+	<ul>
+		<li>Mozilla SpiderMonkey (Gecko 1.8.1+, including <a href="http://www.firefox.pl/">Firefox 2.0+</a>)
+		<li>Server-Side JS: <a href="http://ringojs.org/">RingoJS</a>
+		<li>Mozilla <a href="http://www.mozilla.org/rhino/">Rhino (1.7+)</a>
+	</ul>
+</div>
+
+<div class="slide">
+	<h2><code>const</code> - constant definitions</h2>
+<textarea class="js-snippet" style="height:5.5em">const MAX_COUNT = 5;
+MAX_COUNT = 7;
+c0nsole.write(MAX_COUNT);</textarea>
+	<p class="emphasis">
+		ES6 says const introduces the constant in a block scope.
+		Currently in Firefox it introduces the constant in function scope (like var)
+		<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=611388">Bug 611388</a>
+	</p>
+</div>
+
+<div class="slide" title="That's all">
+	<h2>Thank you!</h2>
+	<p>Questions?</p>
+	<ul class="biblio">
+	    <li>These slides: <a href="http://j.mp/blokowy">j.mp/blokowy</a> (<a href="http://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)</li>
+	    <li><a href="http://ecmascript.org">ecmascript.org</a>
+	    <li><a href="http://wiki.ecmascript.org/doku.php?id=proposals:block_expressions&s=let">ES6: block expressions</a>
+	    <li><a href="http://kangax.github.com/es5-compat-table/non-standard/">kangax: non-standard ES compat table</a>
+	</ul>
+	<div class="colophon">
+	    <p>Slides powered by: <a href="http://github.com/LeaVerou/CSSS">CSSS</a> by <a href="http://leaverou.me">Lea Verou</a></li> + <a href="https://github.com/marcoos/CSSS-plugins">marcoos' CSSS-Plugins</a> (MIT License)</p>
+	    <p>Background: untitled by John Wilson (<a href="http://www.flickr.com/photos/johnwilson1969/362582003/in/photostream/">Flickr: johnwilson1969</a>; CC-BY-SA)</p>
+	    <p>
+	    <p>Hoisting example blatantly stolen from <a href="http://www.adequatelygood.com/2010/2/JavaScript-Scoping-and-Hoisting">adequatelygood.com</a>.<br>
+	    Evil crazy <code>throw</code> trick originally discovered by <a href="http://danbeam.org/blog/2011/05/23/turns-out-there-is-block-scope-in-javascript-kinda/">danbeam.org</a>.</p>
+	</div>
+</div>
+
+<script src="slideshow.js"></script>
+<!--<script src="plugins/css-snippets.js"></script>-->
+<script src="plugins/js-snippets.js" type="application/javascript;version=1.8"></script>
+<script src="plugins/c0nsole.js"></script>
+<script>
+var slideshow = new SlideShow();
+
+JSSnippet.applyTo(".js-snippet");
+
+//new CSSSnippet(document.getElementById('snippet'));
+</script>
+	
+</body>
+</html>	

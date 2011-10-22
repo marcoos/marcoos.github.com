@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+	<title>ECMAScript 5</title>
+	
+	<link href="slideshow.css" rel="stylesheet" />
+	<link href="theme.css" rel="stylesheet" />
+	<link href="sample-slideshow.css" rel="stylesheet" />
+</head>
+<body data-duration="60">
+
+<header id="intro" class="slide">
+	<h1>ECMAScript 5</h1>
+	<p class="attribution">Marek Stępień</p>
+</header>
+
+<div class="slide" title="ECMA?">
+	<h2>Ecma International</h2>
+	<p>&ndash; dawniej <em>European Computer Manufacturers' Association</em></p>
+	<ul>
+		<li><a href="http://www.ecma.ch/">www.ecma.ch</a></li>
+		<li>Organizacja standaryzacyjna zał. w 1961 r. w Genewie</li>
+		<li>CD-ROM (późn. ISO-9660), CLI, C++/CLI, C#...</li>
+		<li>ECMA-262: ECMAScript</li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h2>ECMAScript</h2>
+	<ul>
+		<li class="delayed">1995: Brendan Eich (Netscape) tworzy język Mocha.</li>
+		<li class="delayed">Netscape zmienia nazwę Mocha na LiveScript.</li>
+		<li class="delayed">III 1996: Netscape Navigator 2.0: JavaScript</li>
+		<li class="delayed">VIII 1996: MSIE 3.0: JScript</li>
+		<li class="delayed">VI 1997: standard ECMA-262; kompromis: „ECMAScript”</li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h2>ECMAScript 3</h2>
+	<ul>
+		<li class="delayed">tej wersji języka - z XII 1999 r. - zwykle używacie</li>
+		<li class="delayed">Gecko 0.6+ (od NS6!), IE 5.5 i nowsze, Opera 7+, WebKit</li>
+		<li class="delayed">wszędzie działa prawie idealnie tak samo (poza drobiazgami w IE)</li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h2>ECMAScript 4</h2>
+	<ul>
+		<li class="delayed">planowana wersja, bardziej podobna do Javy (klasy, pakiety)</li>
+		<li class="delayed">implementacje: JScript.NET, ActionScript 2.0 (Flash 7)</li>
+		<li class="delayed">ES 4 nigdy nie doczekał się implementacji w przeglądarkach</li>
+		<li class="delayed">został porzucony tak jak XHTML 2 :)</li>
+		<li class="delayed">ES5 poszedł nieco w innym kierunku</li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h2>ECMAScript 3.1 / 5 / 5.1</h2>
+	<ul>
+		<li class="delayed">poprawki stabilności i zgodności</li>
+		<li class="delayed">mniej nowych rzeczy w stosunku do ES3 niż w porzuconym ES4</li>
+		<li class="delayed">...ale na tyle dużo, że przemianowano 3.1 na 5</li>
+		<li class="delayed">czerwiec 2011: ES 5.1 - drobne poprawki</li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h2>ES 5: co nowego?</h2>
+	<ul>
+		<li class="delayed"><code>JSON.parse(<var>str</var>)</code>, <code>JSON.stringify(<var>obj</var>)</code></li>
+		<li class="delayed">gettery i settery własności obiektów</li>
+		<li class="delayed">nowy sposób na tworzenie: <code>Object.create()</code></li>
+		<li class="delayed">zarządzanie dostępem do własności obiektów (<code>seal()</code>, <code>freeze()</code> itp.)</li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h2>ES 5: co nowego?</h2>
+	<ul>
+		<li class="delayed">funkcje dowiązane: <code>Function.prototype.bind()</code></li>
+		<li class="delayed"><code>"string"[2]</code> zamiast <code>"string".charAt(2)</code></li>
+		<li class="delayed">tryb ścisły (strict mode)</li>
+		<li class="delayed">dodatkowe metody w Array, String i Date</li>
+		<li class="delayed">słowa kluczowe jako nazwy własności (np. <code>obiekt.class</code>, <code>obiekt.if</code>)</li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h2>Kto wspiera ES5?</h2>
+	<ul>
+		<li class="delayed">pełne wsparcie: Firefox 4 i nowsze</li>
+		<li class="delayed">pełne wsparcie oprócz strict mode: IE 9, Chrome 7</li>
+		<li class="delayed">pełne wsparcie oprócz bound functions: WebKit nightlies</li>
+		<li class="delayed">pozostałe - <a target="_blank" href="http://kangax.github.com/es5-compat-table/">kangax ma tabelkę</a> :)</li>
+		<li class="delayed">docelowo wszystkie przeglądarki w przyszłości będą to implementować</li>
+        <li class="delayed">wiele z nowych rzeczy można dodać polyfillami nawet do IE6</li>
+	</ul>
+</div>
+
+<div class="slide" id="features">
+	<h2>JSON</h2>
+	<ul>
+		<li class="delayed">proste i bezpieczne (nie jak <code>eval()</code>) parsowanie JSON-a:<br>
+			<code>var o = JSON.parse('{"prop":"value"}');</code></li>
+		<li class="delayed">serializacja do JSON-a:<br>
+			<code>var s = JSON.stringify({prop: "value"});</code></li>
+		<li class="delayed">IE8+, Fx3.5+, Saf4+, Op10.5+; polyfill: <a href="https://github.com/douglascrockford/JSON-js/blob/master/json2.js">json2.js</a></li>
+		<li class="delayed">Nie ma żadnego powodu, żeby nie używać tego <strong>już teraz</strong>.</li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h2>Funkcje dowiązane</h2>
+	<ul>
+		<li class="delated"><code>Function.prototype.bind(thisObj [, arg1, arg2, ..., argN ])</code></li>
+		<li class="delayed">zwraca funkcję z <code>this</code> ustawionym na <code>thisObj</code> i, opcjonalnie, początkowymi argumentami</li>
+		<li class="delayed">IE9+, Fx4+, Chrome 7+; polyfill: <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/bind">w MDN</a></li>
+        <li class="delayed">Również nie ma powodu, żeby nie używać tego <strong>już teraz</strong></li>
+	</ul>
+</div>
+
+<div class="slide" title="Funkcje dowiązane - przykład">
+	<h2>Przykład</h2>
+    <div id="foo">[#foo]</div>
+    <pre class="delayed" style="font-size:0.7em">// dotychczas:
+document.getElementById("foo").onclick = function () {
+	c0nsole.write("kliknięto foo");
+}</pre>
+    <div class="delayed"><textarea class="js-snippet" style="height:4em">document.getElementById("foo").onclick = c0nsole.write.bind(c0nsole, "kliknięto foo");</textarea></div>
+	<ul>	
+		<li class="delayed"><code>this</code> w dowiązanej funkcji wskazuje na 1. argument <code>bind</code> (<code>c0nsole</code>)</li>
+		<li class="delayed">kolejne (opcjonalne) argumenty <code>bind()</code> stają się argumentami <code>c0nsole.write</code></li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h2>Nowości w Array</h2>
+	<ul>
+		<li class="delayed"><code>Array.isArray(anObj)</code> - czy obiekt jest tablicą (niezależnie od pochodzenia)</li>
+        <li class="delayed"><code><var>arr</var>.indexOf()</code>, <code><var>arr</var>.lastIndexOf()</code> - jak dla <code>String</code></li>
+        <li class="delayed">Funkcje wyższego rzędu</li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h2>Array: funkcje wyższego rzędu</h2>
+	<ul>
+		<li class="delayed">fwr - funkcje, które zwracają lub przyjmują jako argument inne funkcje</li>
+		<li class="delayed"><a href="http://pl.wikipedia.org/wiki/Funkcja_wy%C5%BCszego_rz%C4%99du">więcej teorii - na Wikipedii</a> ;-)</li>
+		<li class="delayed"><code>every</code>, <code>some</code>, <code>forEach</code>,
+		<code>map</code>, <code>filter</code>, <code>reduce</code>, <code>reduceRight</code></li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h2>every, some</h2>
+	<p class="delayed"><code><var>arr</var>.every(function (arrayItem, index, array) {/*...*/})</code></p>
+	<p class="delayed">- sprawdza, czy każdy element tablicy spełnia warunek</p>
+	<p class="delayed"><code><var>arr</var>.some(function (arrayItem, index, array) {/*...*/})</code></p>
+	<p class="delayed">sprawdza, czy choć jeden element spełnia warunek</p>
+	<div class="delayed">
+		<textarea class="js-snippet" style="height: 12em" spellcheck="false">
+var oneToFive = [ 1, 2, 3, 4, 5 ];  
+function isBiggerThan(limit, item) {
+    return item > limit;
+}
+var isBiggerThan2 = isBiggerThan.bind(null, 2);
+c0nsole.write(oneToFive.every(isBiggerThan2)); // false
+c0nsole.write(oneToFive.some(isBiggerThan2)); // true</textarea>
+	</div>
+</div>
+
+<div class="slide">
+	<h2>filter</h2>
+	<p class="delayed"><code><var>arr</var>.filter(function (arrayItem, index, array) {/*...*/})</code></p>
+	<p class="delayed">- zwraca nową tablicę złożoną z elementów oryginalnej tablicy spełniających warunek</p>
+	<div class="delayed">
+		<textarea  class="js-snippet" style="height: 9em" spellcheck="false">
+var oneToFive = [ 1, 2, 3, 4, 5 ];  
+function isBiggerThan2(item) {
+    return item > 2;
+}
+c0nsole.write(oneToFive.filter(isBiggerThan2)); // [ 3, 4, 5 ]</textarea>
+	</div>
+</div>
+
+<div class="slide">
+	<h2>map</h2>
+	<p class="delayed"><code><var>arr</var>.map(function (arrayItem, index, array) {/*...*/})</code></p>
+	<p class="delayed">zwraca nową tablicę złożoną z elementów oryginalnej tablicy przekształconych przez funkcję-argument</p>
+	<div class="delayed">
+		<textarea class="js-snippet" style="height: 7em" spellcheck="false">
+var squares = [ 4, 25, 100 ];
+var roots = squares.map(Math.sqrt);
+c0nsole.write(roots);</textarea>
+	</div>
+</div>
+
+<div class="slide">
+	<h2>forEach</h2>
+	<p class="delayed"><code><var>arr</var>.forEach(function (arrayItem, index, array) {/*...*/})</code></p>
+	<p class="delayed">wywołuje zadaną funkcję na każdym elemencie tablicy (będzie jej argumentem)</p>
+	<div class="delayed">
+		<textarea  class="js-snippet" style="height: 12em" spellcheck="false">
+var emergencies = [ "112", "997", "999" ];
+function phoneCall(number) {
+    c0nsole.write("Calling: " + number);
+}
+emergencies.forEach(phoneCall);</textarea>
+	</div>
+</div>
+
+<div class="slide">
+	<h2>reduce</h2>
+	<p class="delayed"><code><var>arr</var>.reduce(function (accum, currVal, index, array){/*...*/}, initialVal)</code></p>
+	<p class="delayed">Wykonuje funkcję na akumulatorze i każdej wartości tablicy (od lewej do prawej), by uprościć ją do pojedynczej wartości.</p>
+	<div class="delayed">
+		<textarea class="js-snippet" style="height: 11em" spellcheck="false">
+var oneToFive = [ 1, 2, 3, 4, 5 ];  
+function sum(accum, currVal) {
+    c0nsole.write([accum, currVal]);
+    return accum + currVal;
+}
+c0nsole.write("Suma: " + oneToFive.reduce(sum)); // 15</textarea>
+	</div>
+</div>
+
+<div class="slide">
+	<h2>reduce</h2>
+	<p><code><var>arr</var>.reduce(function (accum, currVal, index, array){/*...*/}, initialVal)</code></p>
+	<p class="delayed">Podanie <code>initialVal</code> sprawia, że <code>accum</code> będzie w pierwszym przebiegu równy <code>initialVal</code>, a <code>currVal</code> = <code>arr[0]</code>. Niepodanie <code>initialVal</code> (jak poprzednio) sprawia, że <code>accum</code> w pierwszym przebiegu jest równy <code>arr[0]</code>, a <code>currVal</code> = <code>arr[1]</code>.</p>
+	<div class="delayed">
+		<textarea class="js-snippet" style="height: 9em" spellcheck="false">
+var oneToFive = [ 1, 2, 3, 4, 5 ];  
+function sum(accum, currVal) {
+	return accum + currVal;
+}
+c0nsole.write(oneToFive.reduce(sum, 3000)); // 3015</textarea>
+	</div>
+</div>
+
+<div class="slide">
+	<h2>reduceRight</h2>
+	<p class="delayed"><code><var>arr</var>.reduceRight(function (accum, currVal, index, array){/*...*/}, initialVal)</code></p>
+	<p class="delayed">Działa analogicznie jak <code>reduce</code>, z tym że zaczyna od końca i kieruje się do początku tablicy.</p>
+	<div class="delayed">
+		<textarea  class="js-snippet" style="height: 9em" spellcheck="false">
+var oneToFive = [ 1, 2, 3, 4, 5 ];  
+function sum(accum, currVal) {
+	return accum + currVal;
+}
+c0nsole.write(oneToFive.reduceRight(sum)); // 15</textarea>
+	</div>
+</div>
+
+<div class="slide">
+	<h2>Date i String - nowości</h2>
+	<ul>
+		<li class="delayed"><code>Date.now()</code> - zwraca liczbę ms od 1.01.1970</li>
+        <li class="delayed"><code>Date.prototype.toISOString()</code> - reprezentacja ISO-8601 danej daty</li>
+        <li class="delayed"><code>String.prototype.trim()</code> - kopia stringa bez początkowych i końcowych białych znaków</li>
+	</ul>
+    <div class="delayed"><textarea class="js-snippet">var s = "    " + Date.now() + "    ";
+c0nsole.write(s);   c0nsole.write(s.trim());</textarea></div>
+</div>
+
+<div class="slide">
+    <h2>Tryb ścisły (Strict Mode)</h2>
+    <ul>
+        <li class="delayed">krótko mówiąc, tryb ścisły ogranicza to, co D. Crockford nazywa &bdquo;złymi częściami&rdquo; JS.</li>
+        <li class="delayed">tryb ścisły włączamy w pliku przez taki ciąg znaków na początku pliku: <code>"use strict";</code></li>
+        <li class="delayed">możemy też go włączyć tylko w ramach danej funkcji: <code>function () { "use strict"; /* dalszy kod funkcji */ }</code></li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Tryb ścisły (Strict Mode)</h2>
+    <ul>
+        <li class="delayed">kod w SM wykonuje się inaczej, pewne konstrukcje są niedozwolone składniowo (<code>with</code>!) , inne wyrzucają wyjątki lub zmieniają zachowanie</li>
+        <li class="delayed">należy więc zachować ostrożność przy zlepianiu różnych skryptów w jeden, jeśli któryś z nich zawiera globalną pragmę <code>"use strict";</code>!</li>
+        <li class="delayed">nie mamy dziś czasu na omówienie ograniczeń złych praktyk, jakie wprowadza Strict Mode...</li>
+        <li class="delayed">...przedstawiam je <a href="http://blog.marcoos.com/2011/01/25/ecmascript-5-strict-mode-tryb-scisly/">na blogu</a></li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Obiekty. Na nowo.</h2>
+    <p class="delayed">Zanim powiemy, co jest nowe, przypomnijmy, co było dotychczas możliwe w JS.</p>
+</div>
+
+
+<div class="slide">
+<h2>Typowy obiekt JS</h2>
+<pre>
+var anObject = {
+  prop1: value1,
+  prop2: value2,
+  // ...
+  propN: valueN
+};</pre>
+
+</div>
+
+<div class="slide">
+<h2>Łańcuch prototypów</h2>
+<pre>
+<b>Object.prototype</b>
+  ...
+    someOtherProto
+      someProto
+         ...
+           anObject    
+</pre>
+<p>Między <code>Object.prototype</code> a naszym <code>anObject</code> może istnieć dowolna liczba obiektów w łańcuchu prototypów, z których - poczynając od dołu - pobierane będą własności nieobecne bezpośrednio w <code>anObject</code>.</p>
+</div>
+
+<div class="slide">
+    <h2>Operacje na własnościach</h2>
+    <ul>
+        <li class="delayed">odczyt: <code>x = anObject.prop1</code>
+        <li class="delayed">zapis lub dodanie nowej: <code>anObject.prop2 = 8</code>
+        <li class="delayed">usunięcie: <code>delete anObject.prop3</code>
+        <li class="delayed">wywołanie jako metoda (jeśli <code>prop4</code> jest funkcją): <code>anObject.prop4()</code>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Ograniczenia</h2>
+    <ul>
+        <li class="delayed">każdy może zapisać, odczytać, usunąć, wywołać każdą własność każdego obiektu
+        <li class="delayed">każdy może dodać dowolną własność do dowolnego istniejącego obiektu
+        <li class="delayed">ECMAScript 3 nie przewidywał możliwości tworzenia getterów/setterów
+        <li class="delayed">podejście czysto prototypowe (tzn. bez <code>new</code>) utrudnione
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Próby obchodzenia ograniczeń</h2>
+    <ul>
+        <li class="delayed"><span lang="en">closures</span></li>
+        <li class="delayed">pseudogettery/pseudosettery <code>obj.setProp1()</code>, <code>obj.getProp2()</code>
+        <li class="delayed">niestandardowe rozszerzenia niektórych silników (<code>__defineGetter__</code>, <code>__defineSetter__</code>)
+        <li class="delayed"><code>anObj = Object.beget(protoObj)</code> D. Crockforda / niestd. <code>anObj.__proto__</code>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>ES5 rozwiązuje te problemy</h2>
+    <p>Nowe metody obiektu <code>Object</code>:</p>
+    <p class="delayed">
+        <code>defineProperty()</code>,
+        <code>defineProperties()</code>,
+        <code>getOwnPropertyDescriptor()</code>,
+        <code>create()</code>,
+        <code>seal()</code>,
+        <code>isSealed()</code>,
+        <code>freeze()</code>,
+        <code>isFrozen()</code>,
+        <code>preventExtensions()</code>,
+        <code>isExtensible()</code>,
+        <code>keys()</code>,
+        <code>getOwnPropertyNames()</code>
+    </p>
+
+</div>
+
+<div class="slide">
+    <h2>Object.defineProperty()</h2>
+    <ul>
+        <li>Od teraz można określić, czy własności mają być:
+            <ul>
+                <li class="delayed">zapisywalne (<span lang="en">writable</span>), czy tylko do odczytu
+                <li class="delayed">wyliczalne (<span lang="en">enumerable</span>) - czy widać je w np. <code>for...in</code>, <code>in</code> itp.
+                <li class="delayed">konfigurowalne (<span lang="en">configurable</span>) - czy można zmienić deskr. lub usunąć własność
+            </ul>
+
+        </li>
+        <li class="delayed">można też definiować gettery i settery <small>(ale nie dla writable!)</small>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Object.defineProperty()</h2>
+    <code>Object.defineProperty(obj, prop, descriptor)</code>
+
+    <ul>
+        <li class="delayed"><code>obj</code> - obiekt, do którego dodajemy własność 
+        <li class="delayed"><code>prop</code> - nazwa własności (string)
+        <li class="delayed"><code>descriptor</code> - <b>deskryptor własności</b>
+    </ul>
+</div>
+
+        
+<div class="slide">
+    <h2>Deskryptor własności</h2>
+    <p>Obiekt o następujących własnościach:</p>
+    <ul class="delayed inlineList rotate180">
+        <li><code>value</code> 
+        <li><code>writable</code>
+        <li><code>configurable</code>
+
+        <li><code>enumerable</code>
+        <li><code>get</code>
+        <li><code>set</code>
+    </ul>
+    <p class="delayed"><code>...able</code> są domyślnie <code>false</code>; pozostałe: <code>undefined</code></p>
+
+</div>
+
+<div class="slide" title="Trywialny przykład deskryptora własności">
+    <h2>Zamiast obj = {x: 42};</h2>
+    <textarea class="js-snippet" style="height: 10em">
+var obj = {};
+Object.defineProperty(obj, "x", {
+  writable: true,    
+  enumerable: true,  
+  configurable: true,
+  value: 42
+});
+c0nsole.write("obj.x: " + obj.x);</textarea>
+</div>
+
+<div class="slide">
+    <h2>Deskryptor własności: lepszy przykład :)</h2>
+    <textarea class="js-snippet" style="height: 10em">var obj = { _x: 5 };
+Object.defineProperty(obj, "x", {
+  enumerable: false, 
+  configurable: false,
+  get: function () {  return this._x;  },
+  set: function (newValue) {
+    if (newValue &lt;= 10) {
+        this._x = newValue;
+    } else {
+        this._x = -1;
+    }
+  }
+});
+
+obj.x = 10;
+c0nsole.write(obj.x);
+obj.x = 42;
+c0nsole.write(obj.x);
+</textarea>
+</div>
+
+<div class="slide">
+    <h2>Object.getOwnPropertyDescriptor()</h2>
+        <p><code>Object.getOwnPropertyDescriptor(obj, propName)</code></p>
+        <p class="delayed">pozwala pobrać deskryptor istniejącej własności.</p>
+        <div class="delayed"><textarea class="js-snippet" style="height:6em">c0nsole.write([
+Object.getOwnPropertyDescriptor([1,2], "1"),
+Object.getOwnPropertyDescriptor([3,4,5], "length")
+].map(JSON.stringify).join("\n"));</textarea></div>
+</div>
+
+<div class="slide">
+    <h2>Object.defineProperties()</h2>
+
+    <p class="delayed">To samo, co <code>defineProperty()</code>, ale pozwala jednocześnie zdefiniować więcej własności.
+    <pre class="delayed">Object.defineProperties(obj, {
+  prop1Name: prop1Descriptor,
+  prop2Name: prop2Descriptor,
+  // ...
+  propKName: propKDescriptor
+});</pre>
+</div>
+
+<div class="slide">
+    <h2>Object.preventExtensions()</h2>
+    <p class="delayed">uniemożliwia dodawanie nowych własności do obiektu - nikt nie będzie nam nic dopisywał do naszego obiektu</p>
+    <p class="delayed">Istniejące własności można usuwać (<code>delete</code>), można zmieniać ich deskryptory, a także wartość.</p>
+    <p class="delayed"><code>Object.isExtensible(anObj)</code> informuje o rozszerzalności obiektu</p>
+</div>
+
+<div class="slide">
+    <h2>Object.preventExtensions()</h2>
+    <textarea class="js-snippet" style="height:9em">var x = {a: 5, b: 7};
+Object.preventExtensions(x);
+delete x.a;  // zadziała
+x.b = 31337; // zadziała
+x.c = 42;    // silent failure; w strict: TypeError
+c0nsole.write(JSON.stringify(x));</textarea>
+</div>
+
+<div class="slide">
+    <h2>Object.seal()</h2>
+
+    <p class="delayed">zapieczętowuje obiekt, tj. uniemożliwia dodawanie kolejnych i konfigurowanie/usuwanie istniejących własności:</p>
+    <p class="delayed"><code>Object.isSealed(anObj)</code> informuje, o zapieczętowaniu obiektu</p>
+</div>
+
+<div class="slide">
+    <h2>Object.seal()</h2>
+    <textarea class="js-snippet" style="height:9em">x = { a: 5, b: 7 };
+Object.seal(x);
+x.b = 31337; // zadziała
+delete x.a;  
+x.c = 8;     
+c0nsole.write(JSON.stringify(x));</textarea>
+</div>
+
+<div class="slide">
+    <h2>Object.freeze()</h2>
+    <p class="delayed">zamraża obiekt, uniemożliwiając jakiekolwiek modyfikacje:</p>
+    <p class="delayed"><code>Object.isFrozen(anObj)</code> informuje, o zamrożeniu obiektu</p>
+</div>
+
+<div class="slide">
+    <h2>Object.freeze()</h2>
+    <textarea class="js-snippet" style="height:9em">x = { a: 5, b: 7 };
+Object.freeze(x);
+x.c = 42;    
+x.b = 31337; 
+delete x.a;  
+c0nsole.write(JSON.stringify(x));</textarea>
+</div>
+
+<div class="slide">
+    <h2>preventExtensions, seal, freeze...</h2>
+    <table class="delayed">
+    <thead class="featureTHead">
+        <tr>
+            <th>metoda&nbsp;\&nbsp;operacje</th>
+            <th>zmiana<br>wartości</th>
+            <th>konfi-<br>gurowanie</th>
+
+            <th>dodawanie<br>nowych</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>(brak)</td>
+            <td class="hasFeature">✔</td>
+
+            <td class="hasFeature">✔</td>
+            <td class="hasFeature">✔</td>
+        </tr>
+        <tr>
+            <td><code>preventExtensions()</code></td>
+            <td class="hasFeature">✔</td>
+            <td class="hasFeature">✔</td>
+
+            <td class="hasNoFeature">-</td>
+        </tr>
+        <tr>
+            <td><code>seal()</code></td>
+            <td class="hasFeature">✔</td>
+            <td class="hasNoFeature">-</td>
+            <td class="hasNoFeature">-</td>
+
+        </tr>
+        <tr>
+            <td><code>freeze()</code></td>
+            <td class="hasNoFeature">-</td>
+            <td class="hasNoFeature">-</td>
+            <td class="hasNoFeature">-</td>
+        </tr>
+    </tbody>
+    </table>
+</div>
+
+<div class="slide">
+    <h2>Object.create()</h2>
+    <ul>
+        <li class="delayed"><code>Object.beget()</code> D. Crockforda z dodatkowym argumentem
+        <li class="delayed"><code>anObj = Object.create(proto [, propHash ]);</code>
+            <ul>
+                <li><code>proto</code> - obiekt, który będzie <b>prototypem</b> nowego obiektu
+                <li><code>propHash</code> - opcjonalny obiekt z deskryptorami własności
+                (analogicznie jak przy <code>defineProperties()</code>)
+            </ul>
+        </li>
+
+    </ul>
+</div>
+            
+<div class="slide">
+    <h2>Object.create(): przykład trywialny</h2>
+    <ul class="delayed scaleDownRotate">
+        <li><code>var anObj = Object.create(Object.prototype);<br>
+        var anObj = new Object(); // równoważne<br>
+        var anObj = {}; // równoważne</code></li>
+
+        <li>oczywiście w tym przypadku ostatnia wersja ma więcej sensu :)
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Object.create(): lepszy przykład</h2>
+<pre>
+var volumeButton = {
+  delta: 0, // o ile zmienia się głośność
+  onActivate: function () {
+    someAudioPlayer.volume += this.delta;
+  }  // ...
+};
+
+var volumeUpButton   = Object.create(volumeButton),
+    volumeDownButton = Object.create(volumeButton);
+
+volumeUpButton.delta   = 1;
+volumeDownButton.delta = -1;
+</pre>
+
+</div>
+
+<div class="slide">
+    <h2>Object.keys()</h2>
+    <ul>
+        <li class="delayed">zwraca tablicę wyliczalnych nazw własności obiektu...
+        <li class="delayed" >bez dziedziczonych z prototypów
+    </ul>
+    <div class="delayed">
+        <textarea class="js-snippet" style="height:6em">var obj = { a: 5, b: 7, c: 42 },
+    propNames = Object.keys(obj);
+c0nsole.write(propNames.join(", ")); // "a, b, c"</textarea></div>
+</div>
+
+<div class="slide">
+    <h2>Object.getOwnPropertyNames()</h2>
+    <ul>
+        <li class="delayed">zwraca tablicę wszystkich własności obiektu...
+        <li class="delayed">bez dziedziczonych z prototypów
+    </ul>
+    <div class="delayed">
+        <textarea class="js-snippet" style="height:6em">var arr = [1, 2, 3];
+c0nsole.write(Object.getOwnPropertyNames(arr));
+c0nsole.write(Object.keys(arr));</textarea></div>
+</div>
+
+<div class="slide">
+    <h2>ES &bdquo;Harmony&rdquo; (ES6)</h2>
+    <ul>
+        <li>zasięg blokowy zmiennych (&bdquo;<code>let</code> is the new <code>var</code>&rdquo;)</li>
+        <li>stałe: <code>const x = 52;</code></li>
+        <li>argumenty domyślne: <code>function f(someArg = 5) {}</code></li>
+        <li>destructuring assignment: <code>[a, b] = [5, 10];</code></li>
+        <li>rest i spread dla wywołań funkcji</li>
+        <li>krótka notacja lambda: <code>[1,2,3].map((x) -> x*x)</code></li>
+        <li>obiekty <code>Proxy</code> i metaprogramowanie</li>
+        <li>iteratory i generatory</li>
+        <li>moduły kodu</li>
+    </ul>
+</div>
+
+<div class="slide" title="Koniec">
+	<h2>Dziękuję za uwagę!</h2>
+	<p>Pytania?</p>
+    <ul class="biblio">
+        <li>Te slajdy: <a href="http://bit.ly/ecma5">http://bit.ly/ecma5</a> (na warunkach <a href="http://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)</li>
+        <li><a href="http://ecmascript.org">ecmascript.org</a>
+        <li><a href="http://es5.github.com/">es5.github.com - Annotated ES5</a>
+        <li><a href="https://developer.mozilla.org/En/JavaScript/ECMAScript_5_support_in_Mozilla">ES5 in Mozilla</a>
+        <li><a href="http://kangax.github.com/es5-compat-table/">kangax: ES5 compat table</a>
+    </ul>
+    <div class="colophon">
+		<p>Silnik slajdów: niesamowity <a href="http://github.com/LeaVerou/CSSS">CSSS</a> (autorka: <a href="http://leaverou.me">Lea Verou</a>; MIT License) plus sklecone na szybko pluginy mojego autorstwa :P</p>
+		<p>Tło: bez tytułu, John Wilson (<a href="http://www.flickr.com/photos/johnwilson1969/362582003/in/photostream/">Flickr: johnwilson1969</a>; CC-BY-SA)</p>
+    </div>
+</div>
+
+<script src="slideshow.js"></script>
+<!--<script src="plugins/css-snippets.js"></script>-->
+<script src="plugins/js-snippets.js"></script>
+<script src="plugins/c0nsole.js"></script>
+<script>
+var slideshow = new SlideShow();
+
+JSSnippet.applyTo(".js-snippet");
+
+//new CSSSnippet(document.getElementById('snippet'));
+</script>
+	
+</body>
+</html>

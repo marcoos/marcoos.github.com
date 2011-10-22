@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+<title>JavaScript 1.8.5: Object.*</title>
+<!-- metadata -->
+<meta name="generator" content="S5">
+<meta name="version" content="S5 1.2a2">
+<meta name="author" content="Marek Stępień">
+<!-- configuration parameters -->
+<meta name="defaultView" content="slideshow">
+<meta name="controlVis" content="hidden">
+<!--[if lt IE 9]>
+<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+<!-- style sheet links -->
+<link rel="stylesheet" href="ui/default/slides.css" media="projection" id="slideProj">
+<link rel="stylesheet" href="ui/default/transitions.css" media="screen, projection" id="slideTransitions">
+<link rel="stylesheet" href="ui/default/outline.css" media="screen" id="outlineStyle">
+<link rel="stylesheet" href="ui/default/print.css" media="print" id="slidePrint">
+<link rel="stylesheet" href="ui/default/opera.css" media="projection" id="operaFix">
+<!-- embedded styles -->
+<!-- S5 JS -->
+<script src="ui/default/slides.js"></script>
+</head>
+<body>
+
+<div class="layout">
+<div id="controls"><!-- DO NOT EDIT --></div>
+<div id="currentSlide"><!-- DO NOT EDIT --></div>
+<div id="header"></div>
+<div id="footer">
+<h1>JS 1.8.5: Object.*</h1>
+<h2>meet.js - 19 marca 2011, Warszawa</h2>
+</div>
+</div>
+
+<article class="presentation">
+
+<section class="slide firstSlide">
+    <hgroup>
+        <h1><span class="firstSlide-JS185">JS 1.8.5: </span><span class="firstSlide-Object">Object.*</span></h1>
+        <h3>Nowe sposoby na obiekty<br>w JavaScripcie 1.8.5 i ECMAScripcie 5</h3>
+    </hgroup>
+<div class="handout"></div>
+</section>
+
+<section class="slide">
+    <h1>I kto to mówi?</h1>
+    <ul>
+        <li>Marek Stępień - <a href="http://twitter.com/marcoos">@marcoos</a>, <a href="mailto:marcoos@marcoos.org">marcoos@marcoos.org</a></li>
+        <li>współzałożyciel <a href="http://www.aviary.pl/">Aviary.pl</a> (polski Firefox!)
+        <li>członek (Active Member) stowarzyszenia <a href="http://www.mozilla-europe.org/">Mozilla Europe</a>
+        <li>web developer w <a href="http://interia.pl">Interia.pl</a>
+        <li>zwolennik otwartych standardów WWW
+        <li><a href="http://blog.marcoos.com">bloger</a>
+    </ul>
+</section>
+
+<section class="slide">
+<h1>Dla przypomnienia: typowy obiekt JS</h1>
+<pre><code>
+var anObject = {
+  prop1: value1,
+  prop2: value2,
+  // ...
+  propN: valueN
+};</code></pre>
+</section>
+
+<section class="slide">
+<h1>Dla przypomnienia: łańcuch prototypów</h1>
+<pre><code>
+<b>Object.prototype</b>
+  ...
+    someOtherProto
+      someProto
+         ...
+           anObject    
+</code></pre>
+<p>Między <code>Object.prototype</code> a naszym <code>anObject</code> może istnieć dowolna liczba obiektów w łańcuchu prototypów, z których - licząc od dołu - pobierane będą własności nieobecne bezpośrednio w <code>anObject</code>.</p>
+</section>
+
+<section class="slide">
+    <h1>Dotychczasowe operacje na własnościach</h1>
+    <ul class="incremental rotate180">
+        <li>odczyt: <code>x = anObject.prop1</code>
+        <li>zapis lub dodanie nowej: <code>anObject.prop2 = 8</code>
+        <li>usunięcie: <code>delete anObject.prop3</code>
+        <li>wywołanie jako metoda (jeśli <code>prop4</code> jest funkcją): <code>anObject.prop4()</code>
+    </ul>
+</section>
+
+<section class="slide">
+    <h1>Ograniczenia</h1>
+    <ul class="incremental skew">
+        <li>każdy może zapisać, odczytać, usunąć, wywołać każdą własność każdego obiektu
+        <li>każdy może dodać dowolną własność do dowolnego istniejącego obiektu
+        <li>standard ECMA262 nie przewidywał możliwości tworzenia getterów/setterów
+        <li>podejście czysto prototypowe (tzn. bez <code>new</code>) utrudnione
+    </ul>
+</section>
+
+<section class="slide">
+    <h1>Próby obchodzenia ograniczeń</h1>
+    <ul class="incremental skew">
+        <li><span lang="en">closures</span></li>
+        <li>pseudogettery/pseudosettery <code>obj.setProp1()</code>, <code>obj.getProp2()</code>
+        <li>niestandardowe rozszerzenia niektórych silników (<code>__defineGetter__</code>, <code>__defineSetter__</code>)
+        <li><code>anObj = Object.beget(protoObj)</code> D. Crockforda / niestd. <code>anObj.__proto__</code>
+    </ul>
+</section>
+
+<section class="slide">
+    <h1>ES5 (oraz JS 1.8.5) rozwiązuje te problemy</h1>
+    <p>Nowe metody obiektu <code>Object</code>:</p>
+    <ul class="incremental inlineList scaleX">
+        <li>defineProperty()</li>
+        <li>defineProperties()</li>
+        <li>getOwnPropertyDescriptor()</li>
+        <li>create()</li>
+        <li>seal()</li>
+        <li>isSealed()</li>
+        <li>freeze()</li>
+        <li>isFrozen()</li>
+        <li>preventExtensions()</li>
+        <li>isExtensible()</li>
+        <li>keys()</li>
+        <li>getOwnPropertyNames()</li>
+    </ul>
+</section>
+
+<section class="slide">
+    <h1>Object.defineProperty()</h1>
+    <ul class="incremental scaleDownRotate">
+        <li>Od teraz można określić, czy własności mają być:
+            <ul class="incremental scaleDownRotate">
+                <li>zapisywalne (<span lang="en">writable</span>), czy tylko do odczytu
+                <li>wyliczalne (<span lang="en">enumerable</span>) - czy widać je w np. <code>for...in</code>, <code>in</code> itp.
+                <li>konfigurowalne (<span lang="en">configurable</span>) - czy można zmienić deskr. lub usunąć własność
+            </ul>
+        </li>
+        <li>można też definiować gettery i settery <small>(ale nie dla writable!)</small>
+    </ul>
+</section>
+
+<section class="slide">
+    <h1>Object.defineProperty()</h1>
+    <code>Object.defineProperty(obj, prop, descriptor)</code>
+    <ul class="incremental rotate180">
+        <li><code>obj</code> - obiekt, do którego dodajemy własność 
+        <li><code>prop</code> - nazwa własności (string)
+        <li><code>descriptor</code> - <b>deskryptor własności</b>
+    </ul>
+</section>
+        
+<section class="slide">
+    <h1>Deskryptor własności</h1>
+    <p>Obiekt o następujących własnościach:</p>
+    <ul class="incremental inlineList rotate180">
+        <li><code>value</code> 
+        <li><code>writable</code>
+        <li><code>configurable</code>
+        <li><code>enumerable</code>
+        <li><code>get</code>
+        <li><code>set</code>
+    </ul>
+    <p class="incremental"><code>...able</code> są domyślnie <code>false</code>; pozostałe: <code>undefined</code></p>
+</section>
+
+<section class="slide">
+    <h1>Deskryptor własności: trywialny przykład</h1>
+    <pre><code>
+// odpowiednik: obj = { x: 42; }
+obj = {};
+Object.defineProperty(obj, "x", {
+  writable: true,     // będzie można ustawic wartość
+  enumerable: true,   // będzie widać w for-in, in
+  configurable: true, // będzie można zmienić deskryptor
+  value: 42
+});
+</code></pre>
+</section>
+
+<section class="slide">
+    <h1>Deskryptor własności: lepszy przykład :)</h1>
+    <pre><code>obj = { _x: 5 };
+Object.defineProperty(obj, "x", {
+  enumerable: false,   // nie będzie widać "x" w for-in, in
+  configurable: false, // nie będzie można zmienić deskryptora
+  get: function () {  return this._x;  },
+  set: function (newValue) {
+    if (newValue &lt; 10) {
+        this._x = newValue;
+    } else {
+        this._x = -1;
+    }
+  }
+});        // <small><a target="_blank" href="xmp/obj-defprop.html">[demo (lokalnie)]</a></small>
+</code></pre>
+</section>
+
+<section class="slide">
+    <h1>Deskryptor własności: lepszy przykład :)</h1>
+    <iframe style="width: 100%; height: 300px" src="http://jsfiddle.net/marcoos/FRSWF/embedded/"></iframe>
+</section>
+
+<section class="slide">
+    <h1>Object.getOwnPropertyDescriptor()</h1>
+    <ul class="incremental scaleX">
+        <li><code>Object.getOwnPropertyDescriptor(obj, propName)</code>
+        <li>pozwala pobrać deskryptor istniejącej własności.
+        <li><pre><code>Object.getOwnPropertyDescriptor([1,2], "1")
+// {"value":2,"writable":true,
+// "enumerable":true,"configurable":true}</code></pre>
+        <li><pre><code>Object.getOwnPropertyDescriptor([3,4,5], "length")
+// {"value":3,"writable":true,
+// "enumerable":false,"configurable":false}</code></pre>
+    </ul>
+</section>
+
+<section class="slide">
+    <h1>Object.defineProperties()</h1>
+<ul class="incremental rotate180">
+<li>To samo, co <code>defineProperty()</code>, ale pozwala jednocześnie zdefiniować więcej własności.
+<li><pre><code>Object.defineProperties(obj, {
+  prop1Name: prop1Descriptor,
+  prop2Name: prop2Descriptor,
+  // ...
+  propKName: propKDescriptor
+});</code></pre>
+</ul>
+</section>
+
+<section class="slide">
+    <h1>Object.preventExtensions()</h1>
+    <ul class="incremental scaleDownFromHuge">
+        <li>uniemożliwia dodawanie nowych własności do obiektu - nikt nie będzie nam nic dopisywał do naszego obiektu</li>
+        <li>istniejące własności można usuwać (<code>delete</code>), można zmieniać ich deskryptory, a także wartość</li>
+        <li><pre><code>var x = {a: 5, b: 7};
+Object.preventExtensions(x);
+delete x.a;  // zadziała
+x.b = 31337; // zadziała
+x.c = 42;    // silent failure; w strict: TypeError
+</code></pre>
+        <li><code>Object.isExtensible(anObj)</code> informuje o rozszerzalności obiektu
+    </ul>
+</section>
+
+<section class="slide">
+    <h1>Object.seal()</h1>
+    <ul class="incremental">
+    <li>zapieczętowuje obiekt, tj. uniemożliwia dodawanie kolejnych i konfigurowanie/usuwanie istniejących własności</li>
+    <li><pre><code>x = { a: 5, b: 7};
+Object.seal(x);
+x.b = 31337; // zadziała
+delete x.a;  // silent failure; w strict: TypeError
+x.c = 8;     // silent failure; w strict: TypeError
+</code></pre>
+<li><code>Object.isSealed(anObj)</code> informuje, o zapieczętowaniu obiektu
+</ul>
+</section>
+
+<section class="slide">
+    <h1>Object.freeze()</h1>
+    <ul class="incremental">
+    <li>zamraża obiekt, uniemożliwiając jakiekolwiek modyfikacje
+    <li><pre><code>x = { a: 5, b: 7};
+Object.freeze(x);
+x.c = 42;    // silent failure; w strict: TypeError
+x.b = 31337; // silent failure; w strict: TypeError
+delete x.a;  // silent failure; w strict: TypeError</code></pre>    
+    <li><code>Object.isFrozen(anObj)</code> informuje, o zamrożeniu obiektu
+    </ul>
+</section>
+
+<section class="slide">
+    <h1>preventExtensions, seal, freeze...</h1>
+    <ul style="list-style:none" class="incremental scaleDownRotate">
+    <li>Dobra, zestawmy operacje na własnościach w tabelkę :)
+    <li><table class="realTable">
+    <thead>
+        <tr>
+            <th>metoda\operacje</th>
+            <th>zmiana<br>wartości</th>
+            <th>(prze-)konfi-<br>gurowanie</th>
+            <th>dodawanie<br>nowych</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>(brak)</td>
+            <td class="hasFeature">TAK</td>
+            <td class="hasFeature">TAK</td>
+            <td class="hasFeature">TAK</td>
+        </tr>
+        <tr>
+            <td><code>preventExtensions()</code></td>
+            <td class="hasFeature">TAK</td>
+            <td class="hasFeature">TAK</td>
+            <td class="hasNoFeature">NIE</td>
+        </tr>
+        <tr>
+            <td><code>seal()</code></td>
+            <td class="hasFeature">TAK</td>
+            <td class="hasNoFeature">NIE</td>
+            <td class="hasNoFeature">NIE</td>
+        </tr>
+        <tr>
+            <td><code>freeze()</code></td>
+            <td class="hasNoFeature">NIE</td>
+            <td class="hasNoFeature">NIE</td>
+            <td class="hasNoFeature">NIE</td>
+        </tr>
+    </tbody>
+    </table>
+    </ul>
+</section>
+
+<section class="slide">
+    <h1>Object.create()</h1>
+    <ul class="incremental scaleDownRotate">
+        <li><code>Object.beget()</code> D. Crockforda z dodatkowym argumentem
+        <li><code>anObj = Object.create(proto [, propertiesObject ]);</code>
+            <ul>
+                <li><code>proto</code> - obiekt, który będzie <b>prototypem</b> nowego obiektu
+                <li><code>propertiesObject</code> - opcjonalny obiekt z deskryptorami własności
+                (analogicznie jak przy <code>defineProperties()</code>)
+            </ul>
+        </li>
+    </ul>
+</section>
+            
+<section class="slide">
+    <h1>Object.create(): przykład trywialny</h1>
+    <ul class="incremental scaleDownRotate">
+        <li><code>var anObj = Object.create(Object.prototype);<br>
+        var anObj = new Object(); // równoważne<br>
+        var anObj = {}; // równoważne</code></li>
+        <li>oczywiście w tym przypadku ostatnia wersja ma więcej sensu :)
+    </ul>
+</section>
+
+<section class="slide">
+    <h1>Object.create(): lepszy przykład</h1>
+    <ul class="incremental rotate180" id="oc-ipod">
+        <li id="oc-vup">&larr; volumeUpButton</li>
+        <li id="oc-vdn">&larr; volumeDownButton</li>
+    </ul>
+    <small>Zdjęcie: &copy; <a href="http://pl.wikipedia.org/w/index.php?title=Plik:IPod_shuffle_4G_silver.jpg&amp;filetimestamp=20100914154338">Aconcagua @ WikiMedia Commons</a>, CC-by-SA-3.0</small>
+</section>
+
+<section class="slide">
+    <h1>Object.create(): lepszy przykład</h1>
+<pre><code>
+var volumeButton = {
+  delta: 0, // o ile zmienia się głośność
+  onActivate: function () {
+    someAudioPlayer.volume += this.delta;
+  }  // ...
+};
+
+var volumeUpButton   = Object.create(volumeButton),
+    volumeDownButton = Object.create(volumeButton);
+
+volumeUpButton.delta   = 1;
+volumeDownButton.delta = -1;
+</code></pre>
+</section>
+
+<section class="slide">
+    <h1>Object.keys()</h1>
+    <ul class="incremental rotate180">
+        <li>zwraca tablicę wyliczalnych nazw własności obiektu...
+        <li>bez dziedziczonych z prototypów
+        <li><pre><code>var obj = { a: 5, b: 7, c: 42 },
+    propNames = Object.keys(obj);
+    
+alert(propNames.join(", ")); // "a, b, c"
+        </code></pre>
+    </ul>
+</section>
+
+<section class="slide">
+    <h1>Object.getOwnPropertyNames()</h1>
+    <ul class="incremental scaleDownFromHuge">
+        <li>zwraca tablicę wszystkich własności obiektu...
+        <li>bez dziedziczonych z prototypów
+        <li><pre><code>var arr = [1, 2, 3];
+console.log(Object.getOwnPropertyNames(arr));
+// wynik: ["length", "0", "1", "2"]
+console.log(Object.keys(arr));
+// wynik: ["0", "1", "2"]
+</code></pre>
+    </ul>
+</section>
+    
+<section class="slide">
+    <h1>Gdzie działa?</h1>
+    <ul class="incremental inlineList rotate180">
+        <li>Firefox 4+
+        <li>Chrome 5+
+        <li>IE 9+
+        <li>Safari 5+
+        <li>(Opera obiecuje :))
+    </ul>
+</section>
+<section class="slide">
+    <h1>Co robić?</h1>
+    <ul class="incremental rotate180">
+        <li>Na początku może to być trudne do ogarnięcia...
+        <li>...ale jest na to jeden sposób:
+    </ul>
+</section>
+
+<section class="slide hackSlide">
+    <h1>Hack!</h1>
+    <p style="text-align:center"><img src="pix/hack.png" width="300"></p>
+</section>
+
+<!-- nie dodawać efektów spec. do tej sekcji! -->
+<section class="slide finalSlide">
+    <h1>Dziękuję za uwagę</h1>
+    <ul>
+        <li>Pytania? Walcie śmiało!
+        <li><a href="http://bit.ly/meetjs">bit.ly/meetjs</a> || <a href="http://l10n.mozilla.org/~marcoos/slides/2011/meetjs-warszawa/">http://L10n.mozilla.org/~marcoos/slides/2011/meetjs-warszawa/</a>
+    </ul>
+    <hr>
+    <ul class="finalLinksList">
+        <li><a href="http://ejohn.org/blog/ecmascript-5-objects-and-properties/">J. Resig: ECMAScript 5 Objects and Properties</a>
+        <li><a href="http://blog.thejit.org/2009/11/08/ecma-harmony-and-the-future-of-javascript/">N. Belmonte: ECMA Harmony and the Future of JavaScript</a>
+        <li><a href="http://www.ecmascript.org/">ECMAScript.org</a>
+        <li><a href="http://developer.mozilla.org/">Mozilla Developer Network</a>
+        <li><a href="http://hacks.mozilla.org">Mozilla Hacks</a>
+        <li>Ładniejsze rzeczy? Zobacz <a href="https://demos.mozilla.org/pl/">Web-o-Wonder</a>!
+    </ul>
+    <hr>
+    <footer>
+    <small>&copy; 2011 Marek Stępień. Treść prezentacji na licencji <a href="http://creativecommons.org/licenses/by-sa/3.0/">CC-by-SA 3.0</a>. Font: <a href="http://www.fontsquirrel.com/fonts/Diavlo">Diavlo (Exljbris)</a>. Prezentacja oparta na <a href="http://meyerweb.com/eric/tools/s5/">S5</a> + poprawny HTML5 + -moz-css + -webkit-css :-)</small>
+    </footer>
+</section>
+
+</article>
+</body>
+</html>

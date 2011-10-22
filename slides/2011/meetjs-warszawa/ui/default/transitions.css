@@ -1,0 +1,105 @@
+@font-face {
+  font-family: Diavlo;
+  src: url(Diavlo_MEDIUM_II_37.otf);
+  font-weight: normal;
+}
+
+
+@font-face {
+  font-family: Diavlo;
+  src: url(Diavlo_BOLD_II_37.otf);
+  font-weight: bold;
+}
+
+body {font-family: Diavlo, tahoma, sans-serif}
+
+.firstSlide h1 {
+  font-family:Diavlo, sans-serif !important;
+  font-size:100px !important;
+  text-shadow:#111d2d 0 0 20px;
+  font-size:5em;
+  text-align:center
+}
+
+.firstSlide-five {color: #ea0}
+
+.incremental {opacity: 0;}
+.scaleRotate .incremental{
+  -moz-transform:scale(0.5) rotate(-15deg);
+  -webkit-transform:scale(0.5)  rotate(-15deg);
+  -o-transform:scale(0.5)  rotate(-15deg);
+  transform:scale(0.5)  rotate(-15deg)
+}
+
+.scaleDownRotate .incremental{
+  -moz-transform:scale(3.0) rotate(270deg);
+  -webkit-transform:scale(3.0) rotate(270deg);
+  -o-transform:scale(3.0) rotate(270deg);
+  transform:scale(3.0) rotate(270deg);
+}
+
+.scaleDownFromHuge .incremental{
+  -moz-transform:scale(10.0) rotate(-180deg);
+  -webkit-transform:scale(10.0) rotate(-180deg);
+  -o-transform:scale(10.0) rotate(-180deg);
+  transform:scale(10.0) rotate(-180deg);
+}
+
+.scaleX .incremental{
+  -moz-transform:scaleX(3.0);
+  -webkit-transform:scaleX(3.0);
+  -o-transform:scaleX(3.0);
+  transform:scaleX(3.0);
+}
+
+.rotate180 .incremental{
+  -moz-transform:rotate(180deg);
+  -webkit-transform:rotate(180deg);
+  -o-transform:rotate(180deg);
+  transform:rotate(180deg);
+}
+
+.skew .incremental{
+  -moz-transform:skew(-20deg);
+  -webkit-transform:skew(-20deg);
+  -o-transform:skew(-20deg);
+  transform:skew(-20deg);
+}
+
+.current{
+  -moz-transform:scale(1.0);
+  -webkit-transform:scale(1.0);
+  -o-transform:scale(1.0);
+  transform:scale(1.0);
+
+  -moz-transition:    .5s linear;
+  -webkit-transition: .5s linear;
+  -o-transition:      .5s linear;
+   transition:        .5s linear;
+}
+
+.hideDeletions del {opacity:0 !important;color:#eee !important}
+ins {color:#0a0 !important}
+
+.realTable, .realTable td, .realTable th{
+  border:1px solid #000 !important;
+  border-collapse:collapse;
+}
+.realTable td{padding:5px;text-align:center}
+.hasFeature{color:#0c0 !important}
+.inlineList{display:inline-block}
+.inlineList li{display:inline-block;margin-right:0.8em}
+
+.finalLinksList{
+  -moz-column-count:2;
+  -webkit-column-count:2;
+  column-count:2;
+  
+  -moz-column-gap:1em;
+  -webkit-column-gap:1em;
+  column-gap:1em;
+  
+  font-size:0.5em;
+}
+
+small {font-size:0.4em !important}

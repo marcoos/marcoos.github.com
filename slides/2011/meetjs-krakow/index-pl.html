@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+	<title>ECMAScript 6: zasięg blokowy</title>
+	
+	<link href="slideshow.css" rel="stylesheet" />
+	<link href="theme.css" rel="stylesheet" />
+	<link href="sample-slideshow.css" rel="stylesheet" />
+    <link href="plugins/c0nsole.css" rel="stylesheet" />
+</head>
+<body data-duration="20">
+
+<header id="intro" class="slide">
+	<h1>Zasięg blokowy w ES6</h1>
+	<h2><code>let</code>'s get it started!</h2>
+	<p class="attribution">Marek Stępień</p>
+</header>
+
+<div class="slide">
+	<h2>I kto to mówi?</h2>
+	<ul>
+		<li>Marek Stępień - <a href="http://twitter.com/marcoos">@marcoos</a></li>
+		<li>modne wyrażenie: &bdquo;I wear many hats&rdquo;
+			<ul>
+				<li>sr. web developer w <a href="http://interia.pl">Interia.pl</a>
+				<li>uczestnik projektu Mozilla (Firefox PL, tech-evang, stowarzyszenia <a href="http://mozilla-europe.org">Moz-Eu</a> i <a href="http://aviary.pl/">Aviary.pl</a>)
+				<li>tech bloger - <a href="http://blog.marcoos.com">blog.marcoos.com</a>
+			</ul>
+		<li>W której z tych ról jestem tutaj? Sam nie wiem :)</li>
+	<p>Poglądy wyrażone w prezentacji są wyłącznie moje &ndash; w szczególności nie przedstawiają opinii mojego pracodawcy.</p>
+	</ul>
+</div>
+
+<div class="slide" title="ECMAScript 5">
+	<h2>ECMAScript 5</h2>
+	<ul>
+		<li><code>JSON.parse(<var>str</var>)</code>, <code>JSON.stringify(<var>obj</var>)</code></li>
+		<li><code>Object.create()</code>, <code>defineProperty()</code>, <code>seal()</code>, <code>freeze()</code> itd.</li>
+		<li><code>Function.prototype.bind()</code> - funkcje dowiązane</li>
+		<li>funkcje wyższego rzędu dla tablic (<code>reduce</code>, <code>map</code>, <code>filter</code> itd.)</li>
+		<li>tryb ścisły (strict mode)</li>
+		<li>pełne wsparcie w Firefoksie 4+; pozostałe - <a target="_blank" href="http://kangax.github.com/es5-compat-table/">tabelka</a></li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h2>Uwaga!</h2>
+	<p class="emphasis">Ponieważ mówimy o rzeczach, które dopiero są rozpatrywane przez komitet TC-39,
+	wszystko, co dziś przedstawiam, szanse zostać wywrócone do góry nogami w ostatecznej wersji ES6! :-)</p>
+</div>
+
+<div class="slide">
+	<h2>ECMAScript 6 &bdquo;Harmony&rdquo;</h2>
+	<ul>
+		<li class="delayed">zasięg blokowy zmiennych dzięki <code>let</code></li>
+	        <li class="delayed">stałe: <code>const answerToEverything = 42;</code></li>
+	        <li class="delayed">przypisanie destrukturyzujące: <code>[a, b] = [5, 10];</code></li>
+	        <li class="delayed">krótka notacja lambda: <code>[1,2,3].map((x) -> x*x)</code></li>
+		<li class="delayed">obiekty <code>Proxy</code> i metaprogramowanie</li>
+	        <li class="delayed">iteratory i generatory</li>
+		<li class="delayed"><code>WeakMap</code>
+	        <li class="delayed">argumenty domyślne: <code>function f(someArg = 5) {}</code></li>
+		<li class="delayed">rest i spread dla wywołań funkcji</li>
+	        <li class="delayed">moduły</li>
+		<li class="delayed">klasy (najpewniej jako syntactic sugar)</li>
+		<li class="delayed">i inne...</li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h2>Co z ES6 jest już w Firefoksie?</h2>
+	<ul>
+	        <li>zasięg blokowy zmiennych dzięki <code>let</code> (JS1.7, Fx2)</li>
+	        <li class="risky">stałe: <code>const answerToEverything = 42;</code> (JS 1.5, nawet Netscape&nbsp;6)</li>
+	        <li class="risky">przypisanie destrukturyzujące: <code>[a, b] = [5, 10];</code> (JS 1.8, Fx3)</li>
+	        <li class="risky">krótka notacja lambda: <code>[1,2,3].map(function(x) x*x)</code> (JS 1.8, Fx3)</code></li>
+	        <li class="risky">obiekty <code>Proxy</code> i metaprogramowanie (JS2, Fx4)</li>
+	        <li class="risky">iteratory i generatory, <code>yield <var>x</code> (JS 1.7, Fx2)</li>
+		<li class="risky"><code>WeakMap</code> (Fx6)</li>
+	</ul>
+	<p class="emphasis"><span class="risky-descr">~</span> = duże prawdopodobieństwo różnic z docelową wersją ES6</p>
+</div>
+
+<div class="slide">
+	<h2>Opt-in dla nowej składni ES6 w Fx</h2>
+	<p>Jako że Harmony opiera się w dużej mierze na nowej składni, kod musi być specjalnie oznaczony, żeby można
+	było z niej korzystać. W Firefoksie obecnie wystarczy:</p>
+	<pre>&lt;script type="application/javascript;version=1.8"&gt;
+let x = 5;
+&lt;/script&gt;</pre>
+	<p class="emphasis">NIE JEST to zgodne obecnie z żadnym standardem.</p>
+	<p>Rzeczy z ES6 opierające się na starej składni (Proxy i WeakMap) powinny działać bez tego <code>type</code>.</p>
+</div>
+
+<div class="slide">
+	<h2>Zasięg w JS (ES3) - przypomnienie</h2>
+	<textarea class="js-snippet" style="height:11em">var foo = 42; 
+(function () { 
+    if (!foo) { 
+        var foo = 1701; 
+    } 
+    c0nsole.write(foo); 
+}());</textarea>
+	<p class="delayed">Co wypisze <code>c0nsole.write</code>? Dlaczego?<br>
+	Nie wyrywajcie się do odpowiedzi - dajcie chwilę pomyśleć pozostałym! :)</p>
+</div>
+
+<div class="slide">
+	<h2>Zasięg w JS (ES3) - przypomnienie</h2>
+	<ul>
+		<li><code>var zmienna</code> - tworzy zmienną widoczną w bieżącej funkcji
+		<li>...niezależnie, gdzie pojawiło się <code>var</code> (tzw. &bdquo;hoisting&rdquo;)
+	<p>Kod z poprzedniego przykładu jest interpretowany tak, jak poniższy:</p>
+<textarea class="js-snippet" style="height:13em">var foo = 42; 
+(function () {
+    var foo;
+    if (!foo) { 
+        foo = 1701; 
+    } 
+    c0nsole.write(foo); 
+}());</textarea>
+</div>
+
+<div class="slide">
+	<h2>Zasięg w JS (ES3) - przypomnienie</h2>
+	<ul>
+		<li>w funkcjach wewnętrznych widoczne są zmienne zadeklarowane w otaczających je funkcjach
+		<li>...które nie zostały przesłonięte przez zmienne lokalne o tej samej nazwie
+	</ul>
+<textarea class="js-snippet" style="height:9em">var foo = 42, bar = 1701; 
+(function () {
+    var bar = 31337;
+    c0nsole.write([foo, bar].join(" "));
+}());</textarea>
+</div>
+
+<div class="slide">
+	<h2>Zasięg w JS (ES3) - przypomnienie</h2>
+	<ul>	
+		<li>zmienne globalne są jednocześnie własnościami obiektu globalnego (w przegl.: <code>window</code>s)
+		<li>dostęp do zmiennej niezadeklarowanej przez <code>var</code> = dostęp do globalnej zmiennej o tej nazwie
+	</ul>
+<textarea class="js-snippet" style="height:11em">window.foo = 42; 
+(function () {
+    bar = 1701;
+    foo = 5;
+}());
+c0nsole.write([foo, bar, window.foo, window.bar].join(" "));
+</textarea>
+</div>
+
+<div class="slide">
+	<h2>Problem z <code>var</code></h2>
+	<textarea class="js-snippet" style="height:9em">
+var x = [];
+for (var i = 0; i < 10; i++) {
+  x[i] = function () { c0nsole.write(i); }
+}
+x[3](); // co będzie?</textarea>
+</div>
+
+<div class="slide">
+	<h2>Stare rozwiązanie: domknięcie</h2>
+	<textarea class="js-snippet" style="height:12em">
+var x = [];
+for (var i = 0; i < 10; i++) {
+  (function (c) {
+    x[i] = function () { c0nsole.write(c); }
+  }(i));
+}
+x[3](); // co będzie?</textarea>
+</div>
+
+<div class="slide">
+	<h2>ES5: funkcja dowiązana</h2>
+	<textarea class="js-snippet" style="height:12em">
+var x = [];
+for (var i = 0; i < 10; i++) {
+    x[i] = (function (i) { c0nsole.write(i); }).bind(null, i);
+}
+x[3](); // co będzie?</textarea>
+</div>
+
+<div class="slide">
+	<h2>ES3: wariacki trik z <code>throw</code></h2>
+	<textarea class="js-snippet" style="height:12em">
+var x = [];
+for (var i = 0; i < 10; i++) {
+  try { throw (i) } catch (i) {
+    x[i] = function () { c0nsole.write(i); }
+  }
+}
+x[3](); // co będzie?</textarea>
+<p class="emphasis">ZŁO! Nie używać NIGDY!</p>
+</div>
+
+<div class="slide">
+	<h2>ES6: <code>let</code> the sunshine in :)</h2>
+	<textarea class="js-snippet" style="height:10.5em">
+var x = [];
+for (var i = 0; i < 10; i++) {
+  let c = i;
+  x[i] = function () { c0nsole.write(c); }
+}
+x[3](); // co będzie?</textarea>
+</div>
+
+
+<div class="slide">
+	<h2>Trzy formy <code>let</code></h2>
+	<ul>
+		<li>definicja <code>let</code> (ang. let-definition)
+		<li>polecenie <code>let</code> (ang. let-statement)
+		<li>wyrażenie <code>let</code> (ang. let-expression)
+	</ul>
+</div>
+
+<div class="slide">
+	<h2>Definicja <code>let</code></h2>
+	<ul>
+		<li>definiuje zmienną, której zasięg jest ograniczony do bloku, w którym ta definicja jest zawarta</li>
+		<li>składnia &ndash; identyczna jak <code>var</code>:<br>
+			<code>let <var>zmienna</var>;</code><br>
+			<code>let <var>zmienna</var> = <var>wyrażenie</var>;</code><br>
+			<code>let <var>zm1</var> = <var>wyr1</var>, <var>zm2</var> = <var>wyr2</var>, &hellip;, <var>zmN</var> = <var>wyrN</var></code>
+		</li>
+		<li>jeden działający przykład już widzieliście :)</li>
+	</ul>
+</div>
+
+<div class="slide">
+	<h2>Polecenie <code>let</code></h2>
+	<ul>
+		<li><code>let (<var>inicjalizacje_zmiennych</var>) { <var>blok_kodu</var> }</code></li>
+	</ul>
+
+	<textarea class="js-snippet" style="height:9em">let a = 42;
+let (a = 5, b = 10) {
+  c0nsole.write("a+b: " + (a + b));
+  c0nsole.write("a*b: " + a * b);
+}
+c0nsole.write("a poza blokiem: " + a);
+try {
+  c0nsole.write("b poza blokiem: " + b);
+} catch (exc) {
+  c0nsole.write(exc);
+}</textarea>
+
+</div>
+
+<div class="slide">
+	<h2>Wyrażenie <code>let</code></h2>
+	<ul>
+		<li><code>let (<var>inicjalizacje_zmiennych</var>) <var>wyrażenie</var></code></li>
+		<li>zmienne są lokalne dla wyrażenia, staje się ono implicite blokiem:</li>
+	</ul>
+	<textarea class="js-snippet" style="height:6em">let a = 42;
+let (a = 5, b = 10) c0nsole.write(a + b);
+c0nsole.write(a);</textarea>
+</div>
+
+<div class="slide">
+	<h2>Wyrażenie <code>let</code></h2>
+	<ul>
+		<li>można użyć wszędzie tam, gdzie może pojawić się inne wyrażenie:</li>
+	</ul>
+	<textarea class="js-snippet">c0nsole.write(let (a = 5, b = 10) a + b);</textarea>
+</div>
+
+<div class="slide">
+	<h2>Gdzie można wypróbować <code>let</code>?</h2>
+	<ul>
+		<li>Mozilla SpiderMonkey (Gecko 1.8.1+, w tym <a href="http://www.firefox.pl/">Firefox 2.0+</a>)
+		<li>Server-Side JS: <a href="http://ringojs.org/">RingoJS</a>
+		<li>Mozilla <a href="http://www.mozilla.org/rhino/">Rhino (1.7+)</a>
+	</ul>
+</div>
+
+<div class="slide">
+	<h2><code>const</code> - definicje stałych</h2>
+<textarea class="js-snippet" style="height:5.5em">const MAX_COUNT = 5;
+MAX_COUNT = 7;
+c0nsole.write(MAX_COUNT);</textarea>
+	<p class="emphasis">
+		ES6: zasięg blokowy (jak let), obecnie w Fx: funkcyjny (jak var).
+		<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=611388">Bug 611388</a>
+	</p>
+</div>
+
+<div class="slide" title="Koniec">
+	<h2>Dziękuję za uwagę!</h2>
+	<p>Pytania?</p>
+	<ul class="biblio">
+	    <li>Te slajdy: <a href="http://j.mp/blokowy">j.mp/blokowy</a> (na warunkach <a href="http://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)</li>
+	    <li><a href="http://ecmascript.org">ecmascript.org</a>
+	    <li><a href="http://wiki.ecmascript.org/doku.php?id=proposals:block_expressions&s=let">ES6: block expressions</a>
+	    <li><a href="http://kangax.github.com/es5-compat-table/non-standard/">kangax: non-standard ES compat table</a> (zawiera rzeczy rozważane dla Harmony)
+	</ul>
+	<div class="colophon">
+	    <p>Silnik slajdów: <a href="http://github.com/LeaVerou/CSSS">CSSS</a> (autorka: <a href="http://leaverou.me">Lea Verou</a>)</li> + <a href="https://github.com/marcoos/CSSS-plugins">marcoos' CSSS-Plugins</a> (MIT License)</p>
+	    <p>Tło: bez tytułu, John Wilson (<a href="http://www.flickr.com/photos/johnwilson1969/362582003/in/photostream/">Flickr: johnwilson1969</a>; CC-BY-SA)</p>
+	    <p>Przykład z hoistingiem zmiennych pożyczony z <a href="http://www.adequatelygood.com/2010/2/JavaScript-Scoping-and-Hoisting">adequatelygood.com</a>.<br>
+	    Trik na zasięg blokowy dzięki <code>throw</code> - pomysł z <a href="http://danbeam.org/blog/2011/05/23/turns-out-there-is-block-scope-in-javascript-kinda/">danbeam.org</a>.</p>
+	</div>
+</div>
+
+<script src="slideshow.js"></script>
+<!--<script src="plugins/css-snippets.js"></script>-->
+<script src="plugins/js-snippets.js" type="application/javascript;version=1.8"></script>
+<script src="plugins/c0nsole.js"></script>
+<script>
+var slideshow = new SlideShow();
+
+JSSnippet.applyTo(".js-snippet");
+
+//new CSSSnippet(document.getElementById('snippet'));
+</script>
+	
+</body>
+</html>	

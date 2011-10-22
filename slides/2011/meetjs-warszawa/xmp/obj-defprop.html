@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>deskryptor własności i Object.defineProperty</title>
+<pre>
+<script>
+var obj = { _x: 5, };
+Object.defineProperty(obj, "x", {
+  enumerable: false,   // nie będzie widać w for-in, in
+  configurable: false, // nie będzie można zmienić deskryptora
+  get: function () {  return this._x;  },
+  set: function (newValue) {
+    if (newValue < 10) {
+        this._x = newValue;
+    } else {
+        this._x = -1;
+    }
+  }
+});
+
+obj.x = 1;
+document.writeln(obj.x); // 1
+
+obj.x = 42;
+document.writeln(obj.x); // -1
+
+document.write("for-in: ")
+for (var i in obj) {
+  document.write(i); // tylko _x, nie będzie x
+}
+document.writeln();
+
+try {
+  Object.defineProperty(obj, "x", {
+    value: 8,
+    enumerable: true
+  }); // nie wykona się
+} catch (e) {
+  document.write("Nie udało się przedefiniować obj.x: ");
+  document.writeln(e);
+}
+</script>
+</pre>
