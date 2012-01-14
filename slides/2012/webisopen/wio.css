@@ -1,0 +1,161 @@
+.fill-box {
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.fill-box-tblwww {
+    background-image: url(img/WorldWideWeb_FSF_GNU.png);
+}
+
+.fill-box-wikitaint {
+    background-image: url(img/wikitaint.png);
+}
+
+.fill-box-mytalks {
+    background-image: url(img/mytalks.png);
+    background-size: contain;
+}
+
+.fill-box-bugs {
+    background-image: url(img/bugreports.png);
+}
+
+.fill-box-mdn {
+    background-image: url(img/mdn.png);
+}
+
+.fill-box-mdn2 {
+    background-image: url(img/mdn-webkit.png);
+    background-size: contain;
+}
+
+.fill-box-browserwars {
+    background-image: url(img/browserwars.jpg);
+    background-size: cover;
+}
+
+.fill-box-readiness {
+    background-image: url(img/readiness.png);
+    background-size: cover;    
+}
+
+.fill-box-mytalks .box {
+    margin-top: 170px;    
+}
+
+.fill-box-mdn .box {
+    margin-top: 200px;
+}
+
+.fill-box-mdn2 .box {
+    margin-top: 280px;
+}
+
+.fill-box-iwantyou {
+    background-image: url(img/iwantyou.jpg);
+    background-size: contain;
+}
+
+.fill-box-iwantyou .box {
+    margin-top: 0;
+}
+
+.box {
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 20px;
+    margin: 0;
+}
+
+.box a {
+    color: #cef;
+}
+
+.iloveweb {
+    color: #f36;
+    background: pink;
+}
+
+.theopenweb {
+    color: #457;
+    background: #ace;
+}
+
+.theopenweb a {
+    color: #679;
+}
+
+.challenges {
+    background: #611;
+    color: #fbb;
+}
+
+.solutions {
+    background: #142;
+    color: #fff;
+}
+
+h3 {
+    margin: 0;
+}
+
+.incremental > [aria-selected] {
+    color: #fff;
+}
+
+.iloveweb .incremental > [aria-selected] {
+    color: #e25;
+}
+
+.theopenweb .incremental > [aria-selected] {
+    color: #457;
+}
+
+.challenges .incremental > [aria-selected] {
+    color: #fbb;
+}
+
+.solutions .incremental > [aria-selected] {
+    color: #fff;
+}
+
+.meetjs {
+    background-image: url(img/meetjs.png), -moz-linear-gradient(center top, #000, rgba(0, 0, 0, 0) 200px);
+    background-image: url(img/meetjs.png), -webkit-linear-gradient(center top, #000, rgba(0, 0, 0, 0) 200px);
+    background-image: url(img/meetjs.png), -o-linear-gradient(center top, #000, rgba(0, 0, 0, 0) 200px);
+    background-image: url(img/meetjs.png), -ms-linear-gradient(center top, #000, rgba(0, 0, 0, 0) 200px);
+    background-image: url(img/meetjs.png), -ms-linear-gradient(center top, #000, rgba(0, 0, 0, 0) 200px);
+    background-repeat: no-repeat;
+    background-position: 30px 30px, 0 0;
+}
+
+ul {
+    margin: 0;
+    padding-left: 1em;
+}
+
+blockquote {
+    margin: 0.3ex;
+    padding: 0.3ex;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.final-links,
+.image-credits {
+    font-size: 0.5em;
+}
+
+.final-links {
+    margin-bottom: 0.5em;
+    -moz-column-count: 2;
+    -webkit-column-count: 2;
+    -ms-column-count: 2;
+    -o-column-count: 2;
+    column-count: 2;
+}
+
+.final-slide h3 {
+    text-align: center;
+    margin-bottom: 0.2em;
+}
