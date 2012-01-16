@@ -565,9 +565,15 @@
       this.postMsg(this.remoteWindows[i], "CURSOR", this.idx + "." + this.step);
     }
     if(window.opera) {
-      document.body.style.display = "none";
-      document.body.style.display = "";
+      Dz.forceReflow();
     }
+  }
+
+  Dz.forceReflow = function () {
+    document.body.style.display = "none";
+    setTimeout(function () {
+     document.body.style.display = "block";
+    }, 10);
   }
 
   Dz.back = function() {
@@ -636,7 +642,7 @@
     }
     var incrementals = this.slides[this.idx - 1].$$('.incremental');
     if (this.step <= 0) {
-      incrementals.forEach(function(aNode) {
+      Array.prototype.forEach.call(incrementals, function(aNode) {
         aNode.removeAttribute('active');
       });
       return;
@@ -646,7 +652,7 @@
       next.setAttribute('aria-selected', true);
       next.parentNode.setAttribute('active', true);
       var found = false;
-      incrementals.forEach(function(aNode) {
+      Array.prototype.forEach.call(incrementals, function(aNode) {
         if (aNode != next.parentNode)
           if (found)
             aNode.removeAttribute('active');
@@ -710,12 +716,12 @@
     return this.querySelectorAll(aQuery);
   }).bind(document);
 
-  NodeList.prototype.forEach = function(fun) {
+  /*NodeList.prototype.forEach = function(fun) {
     if (typeof fun !== "function") throw new TypeError();
     for (var i = 0; i < this.length; i++) {
       fun.call(this, this[i]);
     }
-  }
+  }*/
 
 </script>
 <!-- vim: set fdm=marker: }}} -->
