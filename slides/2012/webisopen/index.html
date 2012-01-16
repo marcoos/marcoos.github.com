@@ -70,7 +70,8 @@
       -moz-transition: left 400ms linear 0s;
       -webkit-transition: left 400ms linear 0s;
       -ms-transition: left 400ms linear 0s;
-      -o-transition: left 400ms linear 0s;
+      /* disabled due to painting problems:
+	-o-transition: left 400ms linear 0s;*/
       transition: left 400ms linear 0s;
   }
 
@@ -562,6 +563,10 @@
     }
     for (var i = 0; i < this.remoteWindows.length; i++) {
       this.postMsg(this.remoteWindows[i], "CURSOR", this.idx + "." + this.step);
+    }
+    if(window.opera) {
+      document.body.style.display = "none";
+      document.body.style.display = "";
     }
   }
 
