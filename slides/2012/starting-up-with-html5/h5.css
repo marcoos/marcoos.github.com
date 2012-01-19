@@ -1,0 +1,242 @@
+body {
+    color: #457;
+    background: #bdf;
+}
+
+a { 
+    color: #678;
+}
+
+ol {
+    margin-left: 2em;
+}
+
+
+p {
+    margin-left: 0.3em;
+}
+
+.fill-box {
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.fill-box-w3c {
+    background-image: url(img/w3c-html5.png);
+}
+
+.fill-box-w3c-author {
+     background-image: url(img/w3c-h5fa.png);
+}
+
+.fill-box-mdn {
+    background-image: url(img/mdn.png);
+}
+
+.fill-box-readiness {
+    background-image: url(img/readiness.png);
+    background-size: cover;    
+}
+
+.fill-box-dih5 {
+    background-image: url(img/dih5.png);
+    background-size: contain;
+    background-color: black;    
+}
+
+.fill-box-input-safari {
+    background-image: url(img/safari-inputs.png);
+    background-size: contain;
+}
+
+.fill-box-input-opera {
+    background-image: url(img/opera-inputs.png);
+    background-size: contain;
+}
+
+.fill-box-input-email-ios {
+    background-image: url(img/iphone-input-email.png);   
+    background-size: contain;
+}
+
+.fill-box-input-tel-ios {
+    background-image: url(img/iphone-input-tel.png);   
+    background-size: contain;
+}
+
+.fill-box-h5t {
+    background-image: url(img/html5test.png);   
+    background-size: cover;
+}
+
+.fill-box-h5bp {
+    background-image: url(img/h5bp.png);   
+    background-size: cover;
+}
+
+.fill-box-modernizr {
+    background-image: url(img/modernizr.png);
+    background-size: contain;
+    background-color: black;
+}
+
+.fill-box-donthurtweb {
+    background-image: url(img/donthurtweb.jpg);
+    background-size: contain;
+    text-align: center;
+}
+
+.fill-box-centered .box {
+    margin-top: 200px;
+}
+
+.box {
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 20px;
+    margin: 0;
+}
+
+.box a {
+    color: #cef;
+}
+
+.listview li {
+    margin-bottom: 0.4em;
+}
+
+.first-slide {
+    color: #457;
+    background: #bdf;
+}
+
+.first-slide a {
+    color: #679;
+}
+
+.misnomer {
+    background: #611;
+    color: #fbb;
+}
+
+.markup {
+    background: #142;
+    color: #fff;
+}
+
+.multimedia {
+    background: #530;
+    color: #fa0;
+}
+
+.sectioning {
+    background: #233;
+    color: #dff;
+}
+
+.forms {
+    background: #ab0;
+    color: #650;
+}
+
+.html5now {
+    color: #abcdef;
+    background: #123456;
+}
+
+.knowmore {
+    color: #fff;
+    background-color: #000;
+}
+
+h3 {
+    margin: 0;
+}
+
+.incremental > [aria-selected] {
+    color: #fff;
+}
+
+.listview .incremental > [aria-selected] {
+    color: #457;
+}
+
+.theopenweb .incremental > [aria-selected] {
+    color: #457;
+}
+
+.challenges .incremental > [aria-selected] {
+    color: #fbb;
+}
+
+.solutions .incremental > [aria-selected] {
+    color: #fff;
+}
+
+ul {
+    margin: 0;
+    padding-left: 1em;
+}
+
+blockquote {
+    margin: 0.3ex;
+    padding: 0.3ex;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.first-slide {
+    background-image: url(img/html5.svg);
+    background-size: 40%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.first-slide h1 {
+    margin-top: 5px;
+}
+
+.first-slide h1 span {
+    display: inline-block;
+    overflow: hidden;
+    height: 0;
+    width: 0;
+}
+
+.final-links,
+.final-credits {
+    font-size: 0.5em;
+}
+
+.final-links {
+    margin-bottom: 0.5em;
+    -moz-column-count: 2;
+    -webkit-column-count: 2;
+    -ms-column-count: 2;
+    -o-column-count: 2;
+    column-count: 2;
+}
+
+.final-slide h3 {
+    text-align: center;
+    margin-bottom: 0.1em;
+}
+
+.final-credits {
+    margin-bottom: 0.3em;
+}
+
+.fill-box footer {
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    display: block;
+    padding: 0.3ex;
+}
+
+.fill-box footer a {
+    color: #ace;
+}
+
+.new-elems ul {
+    font-size: 0.8em;
+}

@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+
+<meta charset="utf-8">
+<title>Starting Up with HTML 5</title>
+
+<!-- Your Style -->
+<!-- Define the style of your presentation -->
+
+<!-- Maybe a font from http://www.google.com/webfonts ? -->
+<link href='http://fonts.googleapis.com/css?family=Passion+One|Open+Sans:400,800&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+
+<!--
+<link rel="stylesheet" href="http://yandex.st/highlightjs/6.1/styles/default.min.css">
+<script src="http://yandex.st/highlightjs/6.1/highlight.min.js"></script>
+-->
+<link rel="stylesheet" href="extern/highlight/default.min.css">
+<script src="extern/highlight/highlight.min.js"></script>
+
+<style>
+  html { background-color: black; }
+  body { background-color: white; }
+  /* A section is a slide. It's size is 800x600, and this will never change */
+  section {
+      /* The font from Google */
+    
+      font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+      font-size: 40px;
+  }
+
+  h1, h2, h3, h4, h5 {
+      font-family: 'Passion One', cursive;
+      font-weight: normal;
+  }
+
+  h1, h2 {
+    margin-top: 200px;
+    text-align: center;
+    font-size: 80px;
+  }
+  
+  h1 + h2 {
+    margin-top: 20px;
+    font-size: 40px;
+  }
+  h3 {
+    margin: 100px 0 50px 100px;
+  }
+
+  ul {
+      margin: 50px 200px;
+  }
+
+  q {
+    display: inline-block;
+    width: 700px;
+    height: 600px;
+    background-color: black;
+    color: white;
+    font-size: 60px;
+    padding: 50px;
+  }
+
+  img, video {
+    width: 800px;
+    height: 600px;
+    position: absolute;
+    top: 0;
+    background-color: black;
+    z-index: -1;
+  }
+
+  footer {
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+  }
+
+  /* Transition effect */
+  /* Feel free to change the transition effect for original
+     animations. See here:
+     https://developer.mozilla.org/en/CSS/CSS_transitions
+     How to use CSS3 Transitions: */
+  section {
+      -moz-transition: left 400ms linear 0s;
+      -webkit-transition: left 400ms linear 0s;
+      -ms-transition: left 400ms linear 0s;
+      /* disabled due to painting problems:
+	-o-transition: left 400ms linear 0s;*/
+      transition: left 400ms linear 0s;
+  }
+
+  /* Before */
+  section { left: -150%; }
+  /* Now */
+  section[aria-selected] { left: 0; }
+  /* After */
+  section[aria-selected] ~ section { left: +150%; }
+
+  /* Incremental elements */
+
+  /* By default, visible */
+  .incremental > * { opacity: 1; }
+
+  /* The current item */
+  .incremental > *[aria-selected] { color: red; opacity: 1; }
+
+  /* The items to-be-selected */
+  .incremental > *[aria-selected] ~ * { opacity: 0; }
+
+</style>
+
+<link rel="stylesheet" href="h5.css">
+
+<!-- {{{{ dzslides core
+#
+#
+#     __  __  __       .  __   ___  __
+#    |  \  / /__` |    | |  \ |__  /__`
+#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+#
+#
+# The following block of code is not supposed to be edited.
+# But if you want to change the behavior of these slides,
+# feel free to hack it!
+#
+-->
+
+<!-- Default Style -->
+<style>
+  * { margin: 0; padding: 0; }
+  details { display: none; }
+  body {
+    width: 800px; height: 600px;
+    margin-left: -400px; margin-top: -300px;
+    position: absolute; top: 50%; left: 50%;
+    overflow: hidden;
+  }
+  section {
+    position: absolute;
+    pointer-events: none;
+    width: 100%; height: 100%;
+  }
+  section[aria-selected] { pointer-events: auto; }
+  html { overflow: hidden; }
+  body { display: none; }
+  body.loaded { display: block; }
+  .incremental {visibility: hidden; }
+  .incremental[active] {visibility: visible; }
+</style>
+
+<section class="first-slide">
+    <h1>Starting Up with<span>HTML5</span></h1>
+    <footer>by <a href='http://twitter.com/marcoos'>Marek Stępień</a></footer>
+</section>
+
+<section>
+  <h1>What is HTML5</h1>
+</section>
+
+<section class="misnomer">
+  <h2>HTML5 is a misnomer!</h2>
+</section>
+
+<section class="listview">
+  <h3>What people mean by HTML5</h3>
+  <ul class="incremental">
+    <li>HTML5 as specified by W3C</li>
+    <li>W3C APIs external to HTML5 (Geoloc, DOM4, WebGL)</li>
+    <li>CSS 3 and 4</li>
+    <li>vendor-specific features :(</li>
+    <li>"all the cool &amp; new stuff"</li>
+  </ul>
+</section>
+
+<section class="fill-box fill-box-w3c">
+  <footer>
+    <a href="http://www.w3.org/TR/html5/">www.w3.org/TR/html5</a>
+  </footer>
+</section>
+
+<section class="listview">
+  <h3>The W3C HTML5 spec</h3>
+    <ul class="incremental">
+      <li>HTML elements</li>
+      <li>APIs</li>
+      <li>Stuff for browser makers</li>
+    </ul>
+</section>
+
+<section class="fill-box fill-box-w3c-author">
+  <footer>
+    <a href="http://www.w3.org/TR/html5-author/">www.w3.org/TR/html5-author</a>
+  </footer>
+</section>
+
+<section class="markup">
+  <h2>HTML5 Markup</h2>
+</section>
+
+<section class="listview">
+  <h3>HTML5 syntax &amp; parser</h3>
+  <ul class="incremental">
+    <li>based on real-world HTML4.01 parsers (mostly IE &amp; WebKit)</li>
+    <li>shorter, less redundant syntax</li>
+    <li>less strict than XHTML</li>
+    <li>error-tolerant parser</li>
+  </ul>
+</section>
+
+<section class="listview">
+  <h3>Less redundant syntax</h3>
+  <ul class="incremental">
+    <li><pre><code class="html">&lt;!DOCTYPE html&gt;</code></pre></li>
+    <li><pre><code class="html">&lt;meta charset=UTF-8&gt;</code></pre></li>
+    <li>closing tags often optional: <pre><code class="html">&lt;ul&gt;&lt;li&gt;hello&lt;li&gt;bye&lt;/ul&gt;</code></pre></li>
+  </ul>
+</section>
+
+<section>
+  <h3>Basic HTML5 document</h3>
+  <pre><code class="html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"/&gt;
+  &lt;title&gt;Hello, world&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;p&gt;Hello, world!&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+</section>
+
+<section>
+  <h3>Minimal syntax</h3>
+  <pre><code class="html">&lt;!DOCTYPE html&gt;
+&lt;meta charset=UTF-8&gt;
+&lt;title&gt;Hello, world&lt;/title&gt;
+&lt;p&gt;Hello, world!</code></pre>
+  <p>Maybe not the best for writing, but good for serving.
+  Minimize your HTML5 with <a href="http://code.google.com/speed/page-speed/docs/module.html">mod_pagespeed</a></p>
+</section>
+
+<section>
+  <h3>Default attribute values</h3>
+  <pre><code>&lt;script&gt;
+&lt;style&gt;
+&lt;link rel=stylesheet
+    href=styles.css&gt;
+&lt;input&gt;</code></pre>
+</section>
+
+<!--
+<section class="listview">
+  <h3>Good ol' tags &amp; attrs</h3>
+  <ul class="incremental">
+    <li>improved semantically: <code>&lt;em&gt; &lt;strong&gt; &lt;b&gt; &lt;i&gt; &lt;br&gt; &lt;hr&gt; &lt;s&gt; &lt;small&gt;</code></li>
+    <li>brought-back: <code>&lt;iframe&gt; target &lt;li&nbsp;value&gt;  start</code></li>
+    <li>accepted: <code class="html">&lt;embed&gt; &lt;wbr&gt; &lt;keygen&gt;</code>
+  </ul>
+</section>
+
+<section>
+  <h3>Say goodbye to:</h3>
+  <pre><code class="html">&lt;acronym&gt; &lt;applet&gt; &lt;basefont&gt;
+&lt;big&gt; &lt;center&gt; &lt;dir&gt; &lt;font&gt;
+&lt;isindex&gt; &lt;strike&gt; &lt;tt&gt; &lt;u&gt;
+&lt;frame&gt; &lt;frameset&gt; &lt;noframes&gt;</code></pre>
+</section>
+-->
+
+<section class="listview new-elems">
+<h3>New HTML elements</h3>
+<ul class="incremental">
+  <li>multimedia:<pre><code class="html">&lt;audio&gt; &lt;video&gt; &lt;source&gt; &lt;canvas&gt;</code></pre>
+  </li>
+  <li>sections &amp; content grouping:
+  <pre><code class="html">&lt;section&gt; &lt;article&gt; &lt;aside&gt;
+&lt;hgroup&gt; &lt;header&gt; &lt;footer&gt; &lt;nav&gt;
+&lt;figure&gt; &lt;figcaption&gt;</code></pre></li>
+  </ul>
+</section>
+
+<section class="listview new-elems">
+<h3>New HTML elements</h3>
+<ul class="incremental">
+  <li>text-level semantics:
+<pre><code class="html">&lt;mark&gt; &lt;time&gt; &lt;ruby&gt; &lt;rt&gt; &lt;rp&gt;</code></pre></li>
+  <li>forms: <pre><code class="html">&lt;output&gt; &lt;progress&gt; &lt;meter&gt; &lt;datalist&gt;</code></pre></li>
+  <li>ui: <pre><code class="html">&lt;details&gt; &lt;summary&gt; &lt;command&gt;</code></pre></li>
+  </li>
+</section>
+
+<section class="multimedia">
+  <h2>HTML5 Multimedia</h2>
+</section>
+
+<section class="listview">
+  <h3>&lt;audio&gt; and &lt;video&gt;</h3>
+  <ul class="incremental">
+    <li>&hellip;are for sounds and videos what &lt;img&gt; is for images</li>
+    <li><pre><code class="html">&lt;audio src=friday.ogg&gt;&lt;/audio&gt;</code></pre></li>
+    <li><pre><code class="html">&lt;video src=nggyu.webm&gt;&lt;/video&gt;</code></pre></li>
+    <li>&hellip;not that easy in practice :(</li>
+  </ul>
+</section>
+
+<section class="listview">
+  <h3>Audio &amp; video formats</h3>
+  <ul>
+    <li>Ogg Vorbis; WebM &amp; Ogg Theora:<br>Firefox 4+, Opera 10.6+, Chrome 6+</li>
+    <li>MP3; h.264:<br>IE 9+, Safari 5+, Chrome 6+</li>
+  </ul>
+</section>
+
+<section class="listview">
+  <h3>Many sources for multimedia</h3>
+  <pre><code class="html">&lt;video controls&gt;
+  &lt;source src="nggyu.webm"&gt;
+  &lt;source src="nggyu.mp4"&gt;
+&lt;/video&gt;
+</code></pre>
+</section>
+
+<section>
+  <h3>Video Solutions:</h3>
+  <ul>
+    <li><a href="http://camendesign.com/code/video_for_everybody">Video for Everybody</a> </li>
+    <li><a href="http://vid.ly">vid.ly</a></li>
+    <li>YouTube's <a href="http://apiblog.youtube.com/2010/07/new-way-to-embed-youtube-videos.html">HTML5 embed</a></li>
+  </ul>
+</section>
+
+<section>
+  <h3>Video examples</h3>
+  <ul>
+    <li><a href="http://isithackday.com/syncing-video/">Syncing page content with video</a> by Chris Heilmann</li>
+    <li><a href="http://www.popcornjs.org">Popcorn.js</a></li>
+    <li><a href="https://developer.mozilla.org/en-US/demos/devderby/2011/july/">Mozilla Dev Derby: Videos</a></li>
+  </ul>
+</section>
+
+<section>
+  <h3>Canvas</h3>
+  <p>An element that JavaScript can draw on</p>
+<pre><code class="html">&lt;canvas width="500" 
+    height="400"&gt;
+&hellip;fallback content here&hellip;
+&lt;/canvas&gt;</code></pre>
+<p>Contexts (outside HTML5):</p>
+<ul>
+  <li><a href="http://www.w3.org/TR/2dcontext/">W3C Canvas 2d context </a></li>
+  <li><a href="http://www.khronos.org/webgl/">Khronos WebGL</a> - 3d context</li>
+</ul>
+</section>
+
+<section>
+  <h3>Canvas API and 2d context</h3>
+<pre><code class="javascript">var canvas=$("canvas")[0],
+    ctx=canvas.getContext("2d");
+
+ctx.fillStyle = 
+  "rgba(255, 0, 0, 0.5)";
+ctx.fillRect(x, y, w, h);</code></pre>
+<p><a href="demos/demo_canvas_simple.html">Demo</a></p>
+</section>
+
+<section>
+  <h3>Canvas examples</h3>
+  <ul>
+    <li><a href="https://developer.mozilla.org/en-US/demos/detail/fractal-trees">Fractal trees</a></li>
+    <li><a href="http://mrdoob.github.com/three.js/examples/canvas_particles_random.html">Random Particles (three.js)</a></li>
+    <li><a href="http://craftymind.com/factory/html5video/CanvasVideo.html">Blowing up a video</a></li>
+    <li><a href="http://dl.dropbox.com/u/6213850/WebGL/nyanCat/nyan.html">WebGL 3d NyanCat</a></li>
+    <li><a href="http://maps3d.svc.nokia.com">Nokia Maps 3d</a></li>
+  </ul>
+</section>
+
+<section class="sectioning">
+  <h2>Content sectioning and grouping</h2>
+</section>
+
+<section>
+  <img src="img/sectioning.png" alt="Sections in a typical blog">
+</section>
+
+<section class="forms">
+  <h2>HTML5 Forms &amp; UI</h2>
+</section>
+
+<section class="listview">
+  <h3>HTML5 Forms</h3>
+  <ul>
+    <li>new <code>&lt;input&gt;</code> types</li>
+    <li>new elements (<code>&lt;output&gt;</code>, <code>&lt;progress&gt;</code>, <code>&lt;meter&gt;</code>)</li>
+    <li>client-side validation (without JS)</li>
+  </ul>
+</section>
+
+<section class="listview">
+  <h3>New input types</h3>
+  <ul>
+    <li><code>email tel url search</code>
+    <li><code>color range number</code>
+    <li><code>date datetime datetime-local time month week</code>
+  </ul>
+  <a target="_blank" href="demos/demo_forms.html">Demo</a>
+</section>
+
+<section class="fill-box fill-box-input-opera"><footer>Opera 11.6</footer></section>
+
+<section class="fill-box fill-box-input-safari"><footer>Safari 5.1.1</footer></section>
+
+<section class="fill-box fill-box-input-email-ios"><pre><code class="html">&lt;input type=email&gt;</code></pre></section>
+
+<section class="fill-box fill-box-input-tel-ios"><pre><code class="html">&lt;input type=tel&gt;</code></pre></section>
+
+<section class="listview">
+  <h3>Multi-file upload</h3>
+  <ul class="incremental">
+      <pre><code class="html">&lt;input type=file multiple&gt;</code></pre>
+      <li>server-side sees this the same way as many single inputs with the same <code>name</code>
+      <li>degrades to a single-file input when unsupported
+      <li>JS: <code>fileInput.files</code> - a <code>FileList</code>
+      <li><a target=_blank href="demos/demo_file_multiple.html">Demo (FileList)</a>, <a target=_blank href="demos/demo_file_multiple_url.html">demo (FileAPI)</a>
+  </ul>
+</section>
+
+<section>
+    <h3>&lt;progress&gt; &amp; &lt;meter&gt;</h3>
+    <pre><code class="html">&lt;progress value="250"
+  max="1000"&gt;
+  25 out of 1000
+&lt;/progress&gt;</code></pre>
+    <pre><code class="html">&lt;meter min=0 max=100 value=25&gt;
+25%&lt;/meter&gt;</code></pre>
+    <a target=_blank href="demos/demo_progress_meter.html">Demo</a>
+</section>
+
+<section>
+  <h3>Pros and cons of new input types</h3>
+  <p><b>GOOD:</b> Unsupported degrade to <code>text</code>.</p>
+  <p><b>BAD:</b> Bad support worse than no support.</p>
+  <p><b>Advice:</b> for now, use the ones that are text-like (<code>email</code>, <code>tel</code>, <code>url</code>)</p>
+  <p>wufoo.com has a <a href="http://wufoo.com/html5/">nice support table</a></p>
+</section>
+
+<section class="listview">
+  <h3>Form validation</h3>
+  <ul class="incremental">
+    <li>some input types won't allow sending invalid content (email, number etc.)
+    <li><code>required</code> boolean attribute for required elements
+    <li><code>pattern</code> attribute can be used if other restrictions needed:
+    <pre><code class="html">&lt;input pattern="[a-z]{3}"&gt;</code></pre>
+  </ul>
+</section>
+
+<section class="misnomer">
+<h2>APIs hyped as "HTML5&nbsp;APIs..."</h2>
+</section>
+
+<section>
+<h3>The APIs list</h3>
+<p>NOT part of HTML5!</p>
+<ul>
+  <li><a target="_blank" href="http://www.w3.org/TR/geolocation-API/">Geolocation</a> (<small><a target="_blank" href="http://isgeolocationpartofhtml5.com/">IsGeoLocationPartOfHtml5.com</a></small>)</li>
+  <li><a target="_blank" href="http://www.w3.org/TR/workers/">Web Workers</a></li>
+  <li><a target="_blank" href="http://www.w3.org/TR/webmessaging/">Web Messaging</a></li>
+  <li><a target="_blank" href="http://www.w3.org/TR/webstorage/">Web Storage</a></li>
+  <li><a target="_blank" href="http://www.w3.org/TR/FileAPI/">FileAPI</a></li>
+  <li><a target="_blank" href="http://www.w3.org/TR/file-system-api/">FileSystem API</a></li>
+  <li><a target="_blank" href="http://www.w3.org/TR/websockets/">Web Sockets</a></li>
+</ul>
+</section>
+
+<section class="html5now">
+  <h2>HTML5 now</h2>
+</section>
+
+<section>
+  <h3>What to do?</h3>
+  <ul>
+    <li>Use widely-implemented parts of HTML5
+    <li>Use parts of HTML5 that degrade well
+    <li>Use progressive enhancement
+    <li>Use <a href="https://github.com/Modernizr/Modernizr/wiki/HTML5-Cross-Browser-Polyfills">polyfills and shims</a> (<a href="http://code.google.com/p/html5shiv/">html5shiv</a> needed for IE8-)
+    <li>Stay out of the really unstable features
+  </ul>
+</section>
+
+<section class="knowmore">
+  <h2>Where to get more&nbsp;information?</h2>
+</section>
+
+<section class="fill-box fill-box-ciu fill-box-centered">
+    <div class="box"><a href="http://www.caniuse.com/">www.CanIUse.com</a></div>
+</section>
+
+<section class="fill-box fill-box-h5t fill-box-centered">
+    <div class="box"><a href="http://html5test.com/">html5test.com</a></div>
+</section>
+
+<section class="fill-box fill-box-readiness fill-box-centered">
+    <div class="box"><a href="http://html5readiness.com/">html5readiness.com</a></div>
+</section>
+
+<section class="fill-box fill-box-mdn fill-box-centered">
+    <div class="box"><a href="http://developer.mozilla.org/en/">developer.mozilla.org/en/</a></div>
+</section>
+
+<section class="fill-box fill-box-dih5 fill-box-centered">
+    <div class="box"><a href="http://diveintohtml5.info/">DiveIntoHTML5.info</a></div>
+</section>
+
+<section class="knowmore">
+  <h2>Helpful tools</h2>
+</section>
+
+<section class="fill-box fill-box-h5bp fill-box-centered">
+    <div class="box"><a href="http://html5boilerplate.com/">html5boilerplate.com</a></div>
+</section>
+
+<section class="fill-box fill-box-modernizr fill-box-centered">
+    <div class="box"><a href="http://www.modernizr.com/">Modernizr.com</a></div>
+</section>
+
+<section>
+  <h2>And one more thing...</h2>
+</section>
+
+<section class="fill-box fill-box-donthurtweb fill-box-centered">
+  <div class="incremental">
+    <div class="box">Keep the web OPEN<br>and ACCESSIBLE to all.</div>
+  </div>
+</section>
+
+<section class="theopenweb final-slide">
+    <h3>Thanks! Questions?</h3>
+
+    <p class="box">For follow-ups:
+        <a href="maito:marcoos@marcoos.com">marcoos@marcoos.com</a>,
+        <a href="http://twitter.com/marcoos">@marcoos</a>.</p>
+        
+    <p class="box">Slides URL will be posted soon on Twitter.</p>
+    
+    <p class="final-credits">Image credits: HTML5 logo by the W3C. Screenshots under fair use.</p>
+    <p class="final-credits">Slides engine: <a href="http://paulrouget.com/dzslides/">dzSlides</a>, under WTFPL.</p>
+    <p class="final-credits">Syntax highlighting thanks to <a href="http://softwaremaniacs.org/soft/highlight/en/">highlight.js</a> by Ivan Sagalaev (<a href="https://github.com/isagalaev/highlight.js/blob/master/LICENSE">license</a>)</p>
+</section>
+<script>
+  var Dz = {
+    remoteWindows: [],
+    idx: -1,
+    step: 0,
+    slides: null,
+    params: {
+      autoplay: "1"
+    }
+  };
+
+  Dz.init = function() {
+    document.body.className = "loaded";
+    this.slides = $$("body > section");
+    this.setupParams();
+    this.onhashchange();
+    this.setupTouchEvents();
+    this.onresize();
+  }
+  
+  Dz.setupParams = function() {
+    var p = window.location.search.substr(1).split('&');
+    p.forEach(function(e, i, a) {
+      var keyVal = e.split('=');
+      Dz.params[keyVal[0]] = decodeURIComponent(keyVal[1]);
+    });
+  }
+
+  Dz.onkeydown = function(aEvent) {
+    // Don't intercept keyboard shortcuts
+    if (aEvent.altKey
+      || aEvent.ctrlKey
+      || aEvent.metaKey
+      || aEvent.shiftKey) {
+      return;
+    }
+    if ( aEvent.keyCode == 37 // left arrow
+      || aEvent.keyCode == 38 // up arrow
+      || aEvent.keyCode == 33 // page up
+    ) {
+      aEvent.preventDefault();
+      this.back();
+    }
+    if ( aEvent.keyCode == 39 // right arrow
+      || aEvent.keyCode == 40 // down arrow
+      || aEvent.keyCode == 34 // page down
+    ) {
+      aEvent.preventDefault();
+      this.forward();
+    }
+    if (aEvent.keyCode == 35) { // end
+      aEvent.preventDefault();
+      this.goEnd();
+    }
+    if (aEvent.keyCode == 36) { // home
+      aEvent.preventDefault();
+      this.goStart();
+    }
+    if (aEvent.keyCode == 32) { // space
+      aEvent.preventDefault();
+      this.toggleContent();
+    }
+  }
+
+  /* Touch Events */
+
+  Dz.setupTouchEvents = function() {
+    var orgX, newX;
+    var tracking = false;
+
+    var db = document.body;
+    db.addEventListener("touchstart", start.bind(this), false);
+    db.addEventListener("touchmove", move.bind(this), false);
+
+    function start(aEvent) {
+      aEvent.preventDefault();
+      tracking = true;
+      orgX = aEvent.changedTouches[0].pageX;
+    }
+
+    function move(aEvent) {
+      if (!tracking) return;
+      newX = aEvent.changedTouches[0].pageX;
+      if (orgX - newX > 100) {
+        tracking = false;
+        this.forward();
+      } else {
+        if (orgX - newX < -100) {
+          tracking = false;
+          this.back();
+        }
+      }
+    }
+  }
+
+  /* Adapt the size of the slides to the window */
+
+  Dz.onresize = function() {
+    var db = document.body;
+    var sx = db.clientWidth / window.innerWidth;
+    var sy = db.clientHeight / window.innerHeight;
+    var transform = "scale(" + (1/Math.max(sx, sy)) + ")";
+
+    db.style.MozTransform = transform;
+    db.style.WebkitTransform = transform;
+    db.style.OTransform = transform;
+    db.style.msTransform = transform;
+    db.style.transform = transform;
+  }
+
+
+  Dz.getDetails = function(aIdx) {
+    var s = $("section:nth-of-type(" + aIdx + ")");
+    var d = s.$("details");
+    return d ? d.innerHTML : "";
+  }
+
+  Dz.onmessage = function(aEvent) {
+    var argv = aEvent.data.split(" "), argc = argv.length;
+    argv.forEach(function(e, i, a) { a[i] = decodeURIComponent(e) });
+    var win = aEvent.source;
+    if (argv[0] === "REGISTER" && argc === 1) {
+      this.remoteWindows.push(win);
+      this.postMsg(win, "REGISTERED", document.title, this.slides.length);
+      this.postMsg(win, "CURSOR", this.idx + "." + this.step);
+      return;
+    }
+    if (argv[0] === "BACK" && argc === 1)
+      this.back();
+    if (argv[0] === "FORWARD" && argc === 1)
+      this.forward();
+    if (argv[0] === "START" && argc === 1)
+      this.goStart();
+    if (argv[0] === "END" && argc === 1)
+      this.goEnd();
+    if (argv[0] === "TOGGLE_CONTENT" && argc === 1)
+      this.toggleContent();
+    if (argv[0] === "SET_CURSOR" && argc === 2)
+      window.location.hash = "#" + argv[1];
+    if (argv[0] === "GET_CURSOR" && argc === 1)
+      this.postMsg(win, "CURSOR", this.idx + "." + this.step);
+    if (argv[0] === "GET_NOTES" && argc === 1)
+      this.postMsg(win, "NOTES", this.getDetails(this.idx));
+  }
+
+  Dz.toggleContent = function() {
+    // If a Video is present in this new slide, play it.
+    // If a Video is present in the previous slide, stop it.
+    var s = $("section[aria-selected]");
+    if (s) {
+      var video = s.$("video");
+      if (video) {
+        if (video.ended || video.paused) {
+          video.play();
+        } else {
+          video.pause();
+        }
+      }
+    }
+  }
+
+  Dz.setCursor = function(aIdx, aStep) {
+    // If the user change the slide number in the URL bar, jump
+    // to this slide.
+    aStep = (aStep != 0 && typeof aStep !== "undefined") ? "." + aStep : ".0";
+    window.location.hash = "#" + aIdx + aStep;
+  }
+
+  Dz.onhashchange = function() {
+    var cursor = window.location.hash.split("#"),
+        newidx = 1,
+        newstep = 0;
+    if (cursor.length == 2) {
+      newidx = ~~cursor[1].split(".")[0];
+      newstep = ~~cursor[1].split(".")[1];
+      if (newstep > Dz.slides[newidx - 1].$$('.incremental > *').length) {
+        newstep = 0;
+        newidx++;
+      }
+    }
+    if (newidx != this.idx) {
+      this.setSlide(newidx);
+    }
+    if (newstep != this.step) {
+      this.setIncremental(newstep);
+    }
+    for (var i = 0; i < this.remoteWindows.length; i++) {
+      this.postMsg(this.remoteWindows[i], "CURSOR", this.idx + "." + this.step);
+    }
+    if(window.opera) {
+      Dz.forceReflow();
+    }
+  }
+
+  Dz.forceReflow = function () {
+    document.body.style.display = "none";
+    setTimeout(function () {
+     document.body.style.display = "block";
+    }, 10);
+  }
+
+  Dz.back = function() {
+    if (this.idx == 1 && this.step == 0) {
+      return;
+    }
+    if (this.step == 0) {
+      this.setCursor(this.idx - 1,
+                     this.slides[this.idx - 2].$$('.incremental > *').length);
+    } else {
+      this.setCursor(this.idx, this.step - 1);
+    }
+  }
+
+  Dz.forward = function() {
+    if (this.idx >= this.slides.length &&
+        this.step >= this.slides[this.idx - 1].$$('.incremental > *').length) {
+        return;
+    }
+    if (this.step >= this.slides[this.idx - 1].$$('.incremental > *').length) {
+      this.setCursor(this.idx + 1, 0);
+    } else {
+      this.setCursor(this.idx, this.step + 1);
+    }
+  }
+
+  Dz.goStart = function() {
+    this.setCursor(1, 0);
+  }
+
+  Dz.goEnd = function() {
+    var lastIdx = this.slides.length;
+    var lastStep = this.slides[lastIdx - 1].$$('.incremental > *').length;
+    this.setCursor(lastIdx, lastStep);
+  }
+
+  Dz.setSlide = function(aIdx) {
+    this.idx = aIdx;
+    var old = $("section[aria-selected]");
+    var next = $("section:nth-of-type("+ this.idx +")");
+    if (old) {
+      old.removeAttribute("aria-selected");
+      var video = old.$("video");
+      if (video) {
+        video.pause();
+      }
+    }
+    if (next) {
+      next.setAttribute("aria-selected", "true");
+      var video = next.$("video");
+      if (video && !!+this.params.autoplay) {
+        video.play();
+      }
+    } else {
+      // That should not happen
+      this.idx = -1;
+      // console.warn("Slide doesn't exist.");
+    }
+  }
+
+  Dz.setIncremental = function(aStep) {
+    this.step = aStep;
+    var old = this.slides[this.idx - 1].$('.incremental > *[aria-selected]');
+    if (old) {
+      old.removeAttribute('aria-selected');
+    }
+    var incrementals = this.slides[this.idx - 1].$$('.incremental');
+    if (this.step <= 0) {
+      Array.prototype.forEach.call(incrementals, function(aNode) {
+        aNode.removeAttribute('active');
+      });
+      return;
+    }
+    var next = this.slides[this.idx - 1].$$('.incremental > *')[this.step - 1];
+    if (next) {
+      next.setAttribute('aria-selected', true);
+      next.parentNode.setAttribute('active', true);
+      var found = false;
+      Array.prototype.forEach.call(incrementals, function(aNode) {
+        if (aNode != next.parentNode)
+          if (found)
+            aNode.removeAttribute('active');
+          else
+            aNode.setAttribute('active', true);
+        else
+          found = true;
+      });
+    } else {
+      setCursor(this.idx, 0);
+    }
+    return next;
+  }
+  
+  Dz.postMsg = function(aWin, aMsg) { // [arg0, [arg1...]]
+    aMsg = [aMsg];
+    for (var i = 2; i < arguments.length; i++)
+      aMsg.push(encodeURIComponent(arguments[i]));
+    aWin.postMessage(aMsg.join(" "), "*");
+  }
+
+  window.onload = Dz.init.bind(Dz);
+  window.onkeydown = Dz.onkeydown.bind(Dz);
+  window.onresize = Dz.onresize.bind(Dz);
+  window.onhashchange = Dz.onhashchange.bind(Dz);
+  window.onmessage = Dz.onmessage.bind(Dz);
+</script>
+
+
+<script> // Helpers
+  if (!Function.prototype.bind) {
+    Function.prototype.bind = function (oThis) {
+
+      // closest thing possible to the ECMAScript 5 internal IsCallable
+      // function 
+      if (typeof this !== "function")
+      throw new TypeError(
+        "Function.prototype.bind - what is trying to be fBound is not callable"
+      );
+
+      var aArgs = Array.prototype.slice.call(arguments, 1),
+          fToBind = this,
+          fNOP = function () {},
+          fBound = function () {
+            return fToBind.apply( this instanceof fNOP ? this : oThis || window,
+                   aArgs.concat(Array.prototype.slice.call(arguments)));
+          };
+
+      fNOP.prototype = this.prototype;
+      fBound.prototype = new fNOP();
+
+      return fBound;
+    };
+  }
+
+  var $ = (HTMLElement.prototype.$ = function(aQuery) {
+    return this.querySelector(aQuery);
+  }).bind(document);
+
+  var $$ = (HTMLElement.prototype.$$ = function(aQuery) {
+    return this.querySelectorAll(aQuery);
+  }).bind(document);
+
+  /*NodeList.prototype.forEach = function(fun) {
+    if (typeof fun !== "function") throw new TypeError();
+    for (var i = 0; i < this.length; i++) {
+      fun.call(this, this[i]);
+    }
+  }*/
+
+</script>
+
+
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<!-- vim: set fdm=marker: }}} -->

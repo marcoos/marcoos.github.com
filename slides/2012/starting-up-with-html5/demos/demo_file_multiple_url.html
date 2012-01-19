@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>FileAPI + CSS 3 demo</title>
+<style>
+body {
+    text-align:center;
+    padding-top:20px;
+    background:#000;
+    color:#fff
+}
+
+form {
+    position:absolute;
+    top:0
+}
+
+div {
+    background:#eee;
+    margin-top:100px
+}
+
+img {
+    max-width: 100px;
+    max-height:100px;
+    padding:5px;
+    vertical-align:middle;
+    background:transparent;
+    -moz-transition:1s ease-out;
+    -webkit-transition:1s ease-out;
+    -o-transition:1s ease-out;
+    transition:1s ease-out;
+}
+
+img:hover {
+    background:#fff;
+    -moz-transform:scale(3) translate(0, 20px);
+    -webkit-transform:scale(3) translate(0, 20px);
+    -o-transform:scale(3) translate(0, 20px); 
+    transform:scale(3) translate(0, 20px);
+    
+    -moz-box-shadow:#000 0 0 5px;
+    -webkit-box-shadow:#000 0 0 5px;
+    -o-box-shadow:#000 0 0 5px;
+    box-shadow:#000 0 0 5px;
+} 
+</style>
+
+<form method="POST" action="about:blank">
+    <label>Choose some images (nothing is sent to the server): <input type=file id=fileInput multiple></label>
+</form>
+
+<div id="output">
+</div>
+
+<script>
+var fileInput = document.getElementById("fileInput"),
+    output = document.getElementById("output");
+
+fileInput.onchange = function () {
+
+    var df = document.createDocumentFragment();
+    output.innerHTML = "";
+
+    Array.prototype.forEach.call(
+        fileInput.files,
+        function (file) {
+            var fr,
+                image = document.createElement("img");
+                
+            if (file.url) {
+                image.src = file.url;
+            } else if (window.FileReader) {
+                fr = new FileReader();
+                fr.onloadend = function (e) {
+                    image.src = e.currentTarget.result;
+                }
+                fr.readAsDataURL(file);
+            }
+            
+            df.appendChild(image);
+        }
+    );
+    
+    output.appendChild(df);
+    return false;
+}
+
+</script>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+ <head>
+   <meta charset="UTF-8"> 
+   <title>canvas demo</title>
+    <style>
+    body {text-align: center}
+    button {margin-top: 1em}
+    canvas {
+        display: block;
+        margin: auto;
+        border: 2px solid black;
+        -moz-box-shadow: #666 0 0 10px;
+        -webkit-box-shadow: #666 0 0 10px;
+        -o-box-shadow: #666 0 0 10px;
+        box-shadow: #666 0 0 10px;
+    }
+    </style>
+    <script>
+    function drawBoxes() {
+      var canvas = document.getElementById("canvas");
+      
+      if (canvas.getContext) {
+        var ctx = canvas.getContext("2d");
+        
+        var rgba = [
+            parseInt(Math.random()*255),
+            parseInt(Math.random()*255),
+            parseInt(Math.random()*255),
+            Math.random()
+        ].join(", ");
+        
+        var x = parseInt(Math.random() * 500);
+        var y = parseInt(Math.random() * 400);
+        var w = parseInt(Math.random() * 500);
+        var h = parseInt(Math.random() * 400);
+
+        ctx.fillStyle = "rgba(" + rgba + ")";
+        ctx.fillRect(x, y, w, h);
+      }
+    }
+  </script>
+ </head>
+ <body onload="for (i=0;i<5;i++)drawBoxes()">
+   <canvas id="canvas" width="500" height="400">
+     <p>Przeglądarka nie obsługuje <a href="http://www.w3.org/html/wg/html5/">HTML5</a> &lt;canvas&gt;. :(</p>
+   </canvas>
+   <button onclick=drawBoxes()>Rysuj!</button>
+ </body>
+</html>

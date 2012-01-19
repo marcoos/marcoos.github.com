@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>input type=file multiple</title>
+<form method="post">
+<input type=file id=fileInput multiple><br>
+<textarea id=textArea cols=80 rows=25></textarea>
+</form>
+
+<script>
+var fi = document.getElementById("fileInput"),
+    ta = document.getElementById("textArea");
+    
+fi.onchange = function () {
+    var text;
+    
+    if (fi.files) {
+        text = "Number of files: " + fi.files.length + "\n\n";
+    
+        text += Array.prototype.map.call(fi.files, function (file) {
+            return file.name;
+        }).join("\n");
+    } else {
+        text = "Unknown number of files. input.files not supported.";
+    }
+    
+    ta.value = text;
+}
+</script>

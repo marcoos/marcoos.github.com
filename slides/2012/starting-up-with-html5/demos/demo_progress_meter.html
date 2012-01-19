@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<meta charset=UTF-8>
+<title>Progress + Meter</title>
+<section>
+ <h1>Progress</h1>
+ <p><progress id="pb" max=100><span>0</span>%</progress></p>
+ <script>
+  var progressBar = document.getElementById('pb');
+  function updateProgress(newValue) {
+    progressBar.value = newValue;
+    progressBar.getElementsByTagName('span')[0].textContent = newValue;
+  }
+ </script>
+ <button onclick="updateProgress(0)">0%</button> 
+ <button onclick="updateProgress(20)">20%</button> 
+ <button onclick="updateProgress(50)">50%</button>
+ <button onclick="updateProgress(100)">100%</button> 
+</section>
+
+<section>
+    <h1>Meter</h1>
+    <ul>
+        <li>Disk C:<br><meter value=112 min=0 max=300>112/300 GB</meter>
+        <li>RAM:<br><meter value=512 min=0 max=1024>512/1024 MB</meter>
+    </ul>
+</section>
