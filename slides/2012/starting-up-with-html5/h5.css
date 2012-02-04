@@ -197,6 +197,12 @@ blockquote {
     background-repeat: no-repeat;
 }
 
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    .first-slide {
+        background-image: url(img/html5.png);
+    }
+}
+
 .first-slide h1 {
     margin-top: 5px;
 }
