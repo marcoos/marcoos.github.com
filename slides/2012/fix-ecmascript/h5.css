@@ -1,0 +1,176 @@
+body {
+    color: #457;
+    background: #bdf;
+}
+
+a { 
+    color: #678;
+}
+
+ol {
+    margin-left: 2em;
+}
+
+
+p {
+    margin-left: 0.3em;
+}
+
+.fill-box {
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.fill-box-esdotorg {
+    background-image: url(img/esdotorg.png);
+}
+
+.fill-box-kangaxes6 {
+     background-image: url(img/kangax-es6.png);
+}
+
+.fill-box-jsfixed {
+     background-image: url(img/jsfixed.png);
+}
+
+.fill-box-anguscroll {
+     background-image: url(img/anguscroll.png);
+}
+
+.fill-box-googmod {
+    background-image: url(img/googmod.png);
+}
+
+.fill-box-centered .box {
+    margin-top: 200px;
+}
+
+.box {
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 20px;
+    margin: 0;
+}
+
+.box a {
+    color: #cef;
+}
+
+.listview li {
+    margin-bottom: 0.4em;
+}
+
+.first-slide {
+    color: #457;
+    background: #bdf;
+}
+
+.first-slide a {
+    color: #679;
+}
+
+.whats-the-fuss {
+    background: #611;
+    color: #fbb;
+}
+
+.what-is-that {
+    background: #142;
+    color: #fff;
+}
+
+.already-there {
+    background: #530;
+    color: #fa0;
+}
+
+h3 {
+    margin: 0;
+}
+
+.incremental > [aria-selected] {
+    color: #fff;
+}
+
+.listview .incremental > [aria-selected] {
+    color: #457;
+}
+
+ul {
+    margin: 0;
+    padding-left: 1em;
+}
+
+blockquote {
+    margin: 0.3ex;
+    padding: 0.3ex;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.first-slide {
+    background-image: url(img/js.svg);
+    background-size: 33%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.first-slide h1 {
+    margin-top: 5px;
+    font-size: 1.4em;
+}
+
+.first-slide h1 span {
+    display: inline-block;
+    overflow: hidden;
+    height: 0;
+    width: 0;
+}
+
+.first-slide footer {
+    text-align: right;
+    font-size: 0.8em;
+}
+
+.final-links,
+.final-credits {
+    font-size: 0.5em;
+}
+
+.final-links {
+    margin-bottom: 0.5em;
+    -moz-column-count: 2;
+    -webkit-column-count: 2;
+    -ms-column-count: 2;
+    -o-column-count: 2;
+    column-count: 2;
+}
+
+.final-slide h3 {
+    text-align: center;
+    margin-bottom: 0.1em;
+}
+
+.final-credits {
+    margin-bottom: 0.3em;
+}
+
+.fill-box footer {
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    display: block;
+    padding: 0.3ex;
+}
+
+.fill-box footer a {
+    color: #ace;
+}
+
+.new-elems ul {
+    font-size: 0.8em;
+}
+
+code {
+    background: #fff;
+    color: #000;
+}
